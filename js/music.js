@@ -16,7 +16,11 @@ var videoSource = new Array();
 			document.getElementById("mute").addEventListener('click',mutef);
 			function mutef(){
 			if(unmute.muted)
+			{
 				unmute.muted = false;
+				inputRange.classList.add('step32'); 
+				texts.classList.add('step32');  
+			}
 			else
 				unmute.muted = true;
 			}
