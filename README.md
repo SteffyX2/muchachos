@@ -1,2 +1,0 @@
-# muchachos
-https://muchachos.world
