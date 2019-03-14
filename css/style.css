@@ -94,7 +94,7 @@
 transition: 0.2s linear;
 height: auto;
 width: 29%;
-filter: blur(1px) brightness(100%) drop-shadow(1px 1px 6px beige);
+filter: blur(1px) brightness(100%) drop-shadow(1px 1px 6px gold);
 opacity: 1;
 }
 
@@ -102,7 +102,7 @@ opacity: 1;
 transition: 0.2s linear;
 height: auto;
 width: 29%;
-filter: blur(1px) brightness(100%) drop-shadow(1px 1px 6px beige);
+filter: blur(1px) brightness(100%) drop-shadow(1px 1px 6px gold);
 opacity: 1;
   margin-left: 32%;
 }
