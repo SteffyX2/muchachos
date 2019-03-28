@@ -21,6 +21,36 @@
    text-shadow: 0px 0px 5px black,0px 0px 5px black,0px 0px 5px black,0px 0px 10px #553300,0px 0px 10px #553300;
 }
 
+.prezent_favela {
+		position: absolute;
+   opacity: 0.85;
+   text-align: center;
+   font-size: 200%;
+   top: 28.4%;
+   width:100%;
+   height:100%; 
+   font-family: Float;
+   -webkit-text-stroke-width: 0px;
+   -webkit-text-stroke-color: black;
+   color: red;
+   text-shadow: 0px 0px 5px black,0px 0px 5px black,0px 0px 5px black,0px 0px 10px #553300,0px 0px 10px #553300;
+}
+
+.prezent_index {
+		position: absolute;
+   opacity: 0.85;
+   text-align: center;
+   font-size: 200%;
+   top: 28.4%;
+   width:100%;
+   height:100%; 
+   font-family: Float;
+   -webkit-text-stroke-width: 0px;
+   -webkit-text-stroke-color: black;
+   color: black;
+   text-shadow: 0px 0px 5px black,0px 0px 5px black,0px 0px 5px black,0px 0px 10px #553300,0px 0px 10px #553300;
+}
+
 .imealbuma_sezona {
 	position: absolute;
     opacity: 0.85;
@@ -46,6 +76,36 @@
    -webkit-text-stroke-width: 0px;
    -webkit-text-stroke-color: black;
    color: Gold;
+   text-shadow: 0px 0px 5px black,0px 0px 5px black,0px 0px 5px black,0px 0px 10px #553300,0px 0px 10px #553300;
+}
+
+.sezona_favela {
+	position: absolute;
+   opacity: 0.85;
+   text-align: center;
+   font-size: 200%;
+   top: 56%;
+   width:100%;
+   height:100%; 
+   font-family: Float;
+   -webkit-text-stroke-width: 0px;
+   -webkit-text-stroke-color: black;
+   color: red;
+   text-shadow: 0px 0px 5px black,0px 0px 5px black,0px 0px 5px black,0px 0px 10px #553300,0px 0px 10px #553300;
+}
+
+.sezona_index {
+	position: absolute;
+   opacity: 0.85;
+   text-align: center;
+   font-size: 200%;
+   top: 56%;
+   width:100%;
+   height:100%; 
+   font-family: Float;
+   -webkit-text-stroke-width: 0px;
+   -webkit-text-stroke-color: black;
+   color: black;
    text-shadow: 0px 0px 5px black,0px 0px 5px black,0px 0px 5px black,0px 0px 10px #553300,0px 0px 10px #553300;
 }
 
@@ -118,6 +178,23 @@ opacity: 1;
   margin-left: 32%;
 }
 
+#front_favela{
+transition: 0.2s linear;
+height: auto;
+width: 29%;
+filter: blur(1px) brightness(100%) drop-shadow(1px 1px 6px red);
+opacity: 1;
+}
+
+#back_favela{
+transition: 0.2s linear;
+height: auto;
+width: 29%;
+filter: blur(1px) brightness(100%) drop-shadow(1px 1px 6px red);
+opacity: 1;
+  margin-left: 32%;
+}
+
 #applemusic{
 transition: 0.2s linear;
 height: auto;
@@ -131,6 +208,29 @@ flex: 1;
 }
 
 #applemusic:hover{
+-webkit-transition: 1s linear;
+-moz-transition: 1s -moz-linear;
+-o-transition: 1s -o-linear;
+transition: 1s linear;
+-webkit-filter: blur(3px); /* Safari 6.0 - 9.0 */
+filter: blur(3px) brightness(25%); 
+opacity: 1;   
+transform: rotate(360deg);
+}
+
+#applemusic_favela{
+transition: 0.2s linear;
+height: auto;
+width: 8%;
+border: 9px solid #b3071b;
+border-style: double;
+border-radius: 100%;
+filter: blur(1px) brightness(100%) drop-shadow(1px 1px 6px red);
+opacity: 1;
+flex: 1;
+}
+
+#applemusic_favela:hover{
 -webkit-transition: 1s linear;
 -moz-transition: 1s -moz-linear;
 -o-transition: 1s -o-linear;
@@ -164,6 +264,29 @@ opacity: 1;
 transform: rotate(360deg);
 }
 
+#itunes_favela{
+transition: 0.2s linear;
+height: auto;
+width: 8%;
+border: 9px solid #b3071b;
+border-style: double;
+border-radius: 100%;
+filter: blur(1px) brightness(100%) drop-shadow(1px 1px 6px red);
+opacity: 1;
+flex: 1;
+}
+
+#itunes_favela:hover{
+-webkit-transition: 1s linear;
+-moz-transition: 1s -moz-linear;
+-o-transition: 1s -o-linear;
+transition: 1s linear;
+-webkit-filter: blur(3px); /* Safari 6.0 - 9.0 */
+filter: blur(3px) brightness(25%); 
+opacity: 1;   
+transform: rotate(360deg);
+}
+
 #deezer{
 transition: 0.2s linear;
 height: auto;
@@ -177,6 +300,29 @@ flex: 1;
 }
 
 #deezer:hover{
+-webkit-transition: 1s linear;
+-moz-transition: 1s -moz-linear;
+-o-transition: 1s -o-linear;
+transition: 1s linear;
+-webkit-filter: blur(3px); /* Safari 6.0 - 9.0 */
+filter: blur(3px) brightness(25%); 
+opacity: 1;   
+transform: rotate(360deg);
+}
+
+#deezer_favela{
+transition: 0.2s linear;
+height: auto;
+width: 8%;
+border: 9px solid #b3071b;
+border-style: double;
+border-radius: 100%;
+filter: blur(1px) brightness(100%) drop-shadow(1px 1px 6px red);
+opacity: 1;
+flex: 1;
+}
+
+#deezer_favela:hover{
 -webkit-transition: 1s linear;
 -moz-transition: 1s -moz-linear;
 -o-transition: 1s -o-linear;
@@ -210,6 +356,29 @@ opacity: 1;
 transform: rotate(360deg);
 }
 
+#soundcloud_favela{
+transition: 0.2s linear;
+height: auto;
+width: 8%;
+border: 9px solid #b3071b;
+border-style: double;
+border-radius: 100%;
+filter: blur(1px) brightness(100%) drop-shadow(1px 1px 6px red);
+opacity: 1;
+flex: 1;
+}
+
+#soundcloud_favela:hover{
+-webkit-transition: 1s linear;
+-moz-transition: 1s -moz-linear;
+-o-transition: 1s -o-linear;
+transition: 1s linear;
+-webkit-filter: blur(3px); /* Safari 6.0 - 9.0 */
+filter: blur(3px) brightness(25%); 
+opacity: 1;   
+transform: rotate(360deg);
+}
+
 #spotify{
 transition: 0.2s linear;
 height: auto;
@@ -233,6 +402,29 @@ opacity: 1;
 transform: rotate(360deg); 
 }
 
+#spotify_favela{
+transition: 0.2s linear;
+height: auto;
+width: 8%;
+border: 9px solid #b3071b;
+border-style: double;
+border-radius: 100%;
+filter: blur(1px) brightness(100%) drop-shadow(1px 1px 6px red);
+opacity: 1;
+flex: 1;
+}
+
+#spotify_favela:hover{
+-webkit-transition: 1s linear;
+-moz-transition: 1s -moz-linear;
+-o-transition: 1s -o-linear;
+transition: 1s linear;
+-webkit-filter: blur(3px); /* Safari 6.0 - 9.0 */
+filter: blur(3px) brightness(25%); 
+opacity: 1;   
+transform: rotate(360deg);
+}
+
 #youtube{
 transition: 0.2s linear;  
 height: auto;
@@ -254,6 +446,29 @@ transition: 1s linear;
 filter: blur(3px) brightness(25%); 
 opacity: 1; 
 transform: rotate(360deg); 
+}
+
+#youtube_favela{
+transition: 0.2s linear;
+height: auto;
+width: 8%;
+border: 9px solid #b3071b;
+border-style: double;
+border-radius: 100%;
+filter: blur(1px) brightness(100%) drop-shadow(1px 1px 6px red);
+opacity: 1;
+flex: 1;
+}
+
+#youtube_favela:hover{
+-webkit-transition: 1s linear;
+-moz-transition: 1s -moz-linear;
+-o-transition: 1s -o-linear;
+transition: 1s linear;
+-webkit-filter: blur(3px); /* Safari 6.0 - 9.0 */
+filter: blur(3px) brightness(25%); 
+opacity: 1;   
+transform: rotate(360deg);
 }
 
 #mute{
