@@ -119,7 +119,7 @@
 
 .album_sezona {
 	left: 8%;
-	width: 28%;
+	width: 90%;
 	height: auto;
 	position: absolute;
 	text-align: left;
@@ -129,7 +129,7 @@
 
 .album_favela {
 	right: 8%;
-	width: 28%;
+	width: 90%;
 	height: auto;
 	position: absolute;
 	text-align: right;
@@ -164,7 +164,7 @@
 #front{
 transition: 0.2s linear;
 height: auto;
-width: 100%;
+width: 29%;
 filter: blur(1px) brightness(100%) drop-shadow(1px 1px 6px gold);
 opacity: 1;
 }
@@ -181,7 +181,7 @@ opacity: 1;
 #front_favela{
 transition: 0.2s linear;
 height: auto;
-width: 100%;
+width: 29%;
 filter: blur(1px) brightness(100%) drop-shadow(1px 1px 6px red);
 opacity: 1;
 }
