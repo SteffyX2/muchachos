@@ -118,23 +118,23 @@
 }
 
 .album_sezona {
-	left: 12%;
-	width: 58%;
+	left: 8%;
+	width: 90%;
 	height: auto;
 	position: absolute;
 	text-align: left;
 	display: flexbox;
-	top: 12%;
+	top: 13%;
 }
 
 .album_favela {
-	right: 12%;
-	width: 58%;
+	right: 8%;
+	width: 90%;
 	height: auto;
 	position: absolute;
 	text-align: right;
 	display: flexbox;
-	top: 12%;
+	top: 13%;
 }
 
 .covers {
