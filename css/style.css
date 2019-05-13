@@ -211,6 +211,29 @@ opacity: 1;
   margin-left: 32%;
 }
 
+#genius{
+transition: 0.2s linear;
+height: auto;
+width: 8%;
+border: 9px solid #ba9b14;
+border-style: double;
+border-radius: 100%;
+filter: blur(1px) brightness(100%) drop-shadow(1px 1px 6px gold);
+opacity: 1;
+flex: 1;
+}
+
+#genius:hover{
+-webkit-transition: 1s linear;
+-moz-transition: 1s -moz-linear;
+-o-transition: 1s -o-linear;
+transition: 1s linear;
+-webkit-filter: blur(3px); /* Safari 6.0 - 9.0 */
+filter: blur(3px) brightness(25%); 
+opacity: 1;   
+transform: rotate(360deg);
+}
+
 #applemusic{
 transition: 0.2s linear;
 height: auto;
