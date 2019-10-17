@@ -118,16 +118,26 @@
 }
 
 .album_sezona {
-	left: 8%;
+	left: 1%;
 	width: 28%;
 	height: auto;
 	position: absolute;
 	text-align: left;
 	display: flexbox;
-	top: 13%;
+	top: 3%;
 }
 
 .album_favela {
+	left: 1%;
+	width: 28%;
+	height: auto;
+	position: absolute;
+	text-align: left;
+	display: flexbox;
+	top: 50%;
+}
+
+.album_fiksni {
 	right: 8%;
 	width: 28%;
 	height: auto;
@@ -164,7 +174,7 @@
 #front{
 transition: 0.2s linear;
 height: auto;
-width: 100%;
+width: 75%;
 filter: blur(1px) brightness(100%) drop-shadow(1px 1px 6px gold);
 opacity: 1;
 }
@@ -189,8 +199,16 @@ opacity: 1;
 #front_favela{
 transition: 0.2s linear;
 height: auto;
-width: 100%;
+width: 75%;
 filter: blur(1px) brightness(100%) drop-shadow(1px 1px 6px red);
+opacity: 1;
+}
+
+#front_fiksni{
+transition: 0.2s linear;
+height: auto;
+width: 125%;
+filter: blur(1px) brightness(100%) drop-shadow(1px 1px 6px gold);
 opacity: 1;
 }
 
