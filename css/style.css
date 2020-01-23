@@ -212,6 +212,14 @@ filter: blur(1px) brightness(100%) drop-shadow(1px 1px 6px gold);
 opacity: 1;
 }
 
+#front_sombrero{
+transition: 0.2s linear;
+height: auto;
+width: 125%;
+filter: blur(1px) brightness(100%) drop-shadow(1px 1px 6px red);
+opacity: 1;
+}
+
 #front_favela2{
 transition: 0.2s linear;
 height: auto;
