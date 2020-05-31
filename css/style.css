@@ -137,14 +137,24 @@
 	top: 50%;
 }
 
-.album_fiksni {
-	right: 8%;
+.album_sombrero {
+	right: 3%;
 	width: 28%;
 	height: auto;
 	position: absolute;
 	text-align: right;
 	display: flexbox;
-	top: 13%;
+	top: 3%;
+}
+
+.album_rakija {
+	right: 3%;
+	width: 28%;
+	height: auto;
+	position: absolute;
+	text-align: right;
+	display: flexbox;
+	top: 50%;
 }
 
 .covers {
@@ -215,7 +225,15 @@ opacity: 1;
 #front_sombrero{
 transition: 0.2s linear;
 height: auto;
-width: 125%;
+width: 75%;
+filter: blur(1px) brightness(100%) drop-shadow(1px 1px 6px red);
+opacity: 1;
+}
+
+#front_rakija{
+transition: 0.2s linear;
+height: auto;
+width: 75%;
 filter: blur(1px) brightness(100%) drop-shadow(1px 1px 6px red);
 opacity: 1;
 }
