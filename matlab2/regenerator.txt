@@ -1,0 +1,15 @@
+function [s_iz,bit] = regenerator(s_ul,t,A,T,pojacanje)
+br_bita = round(t(end) / T);
+N = length(s_ul) / br_bita;
+bit = zeros(1, br_bita);
+ 
+for i = 1 : br_bita
+	impuls = s_ul(N*(i-1) + 1 : N * i);
+	if abs(mean(impuls)–A(1))< abs(mean(impuls)–A(2))
+		bit(i) = 0;
+	else
+		bit(i) = 1;
+	end
+end
+deltaT = t(2) - t(1);
+s_iz = gen_impulsa(bit, A * pojacanje, T, deltaT);
