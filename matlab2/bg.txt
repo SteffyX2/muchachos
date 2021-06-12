@@ -1,0 +1,23 @@
+bit = rand_bit(1,10000);
+ 
+A = [0 1];
+T = 0.1;
+deltaT = 0.01;
+a = 1;
+ 
+[s, t] = gen_impulsa(bit, A, T, deltaT);
+ 
+n = 0:0.05:4;
+e = zeros(size(n));
+ 
+for i = 1 : length(n)
+	sn = kanal(s, a, n(i));
+	[~, bit_n] = regenerator(sn, t, A, T, 1);
+	e(i) = sum(abs(bit -bit_n))/length(bit);
+end
+figure
+plot(n, e, 'linewidth', 2)
+axis tight
+title('verovatnoca greske u odnosu na sum')
+xlabel('sum')
+ylabel('verovatnoca greske')
