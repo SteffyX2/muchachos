@@ -1,0 +1,34 @@
+bit = rand_bit(1,20);
+ 
+A = [0 5];
+T = 0.1;
+deltaT = 0.01;
+n = 0.25;
+a = 0.5;
+[s, t] = gen_impulsa(bit, A, T, deltaT);
+ 
+figure
+subplot(3,1,1)
+plot(t, s)
+axis tight
+ylim([-1 A(2) + 1])
+title('Pocetni signal')
+ 
+sr = s;
+for i = 1 : 15
+	sr = kanal(sr, a, n);
+	subplot(3,1,2)
+	plot(t, sr)
+	axis tight
+	ylim([-1 A(2)+1])
+	title('Signal na ulazu')
+ 
+	sr = regenerator(sr, t, A/2, T, 2);
+	subplot(3,1,3)
+	plot(t, sr)
+	axis tight
+	ylim([-1 A(2)+1])
+	title('Signal na izlazu')
+ 
+	pause
+end
