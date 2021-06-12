@@ -1,0 +1,17 @@
+zadatak13.txt vraca impuls definisan na nacin X(t)
+zadatak15.txt pravougaoni impulsi
+zadatak17.txt furijev red, HARMONICI
+zadatak18.txt ODABIRANJE signala
+zadatak19.txt KVANTIZACIJA
+zadatak21.txt rand_bit sluc sekvenca bita
+zadatak22.txt + zadatak122.txt (funkcija) izlaz daje povorku impulsa od sekvence bita
+zadatak23.txt + zadatak123.txt (funkcija) izlaz daje povorku impulsa od sekvence bita komplikovanjije
+DODATNI
+gen_imp.txt GENERATOR IMPULSA
+kanal.txt KANAL
+pojacavac.txt POJACAVAC
+msp.txt MODELOVATI SISTEM POJACAVAC
+reg.txt REGENERATOR
+msr.txt MODELOVATI SISTEM REGENERATOR
+bg.txt VEROVATNOCA BITNE GRESKE
+https://pastebin.com/QcbvvPUF
