@@ -1,87 +1,97 @@
 #include <LiquidCrystal.h>
-LiquidCrystal lcd(8,9,4,5,6,7);
 
-char captcha[8];
-char test[64];
+LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
 
-int tip;
-int i;
-int duzina_captcha;
-int duzina_test;
-int ispravno;
-void setup()
-{
-  lcd.begin(16,2);
+char rec[8]; //za random tekst
+int duzina_reci; 
+int i; //za generisanje malih, velikih slova ili cifara
+
+int tip_karaktera; // za svaki karakter randomizujemo njegov tip
+
+void setup() {
   Serial.begin(9600);
-  randomSeed(analogRead(6));
-
+  lcd.begin(16, 2);
+  
+  randomSeed(analogRead(5)); //inicijalizacija randomizacije
 }
 
-void loop()
-{
-
-  duzina_captcha = random(5,9);
-
+void loop() {
+  
+  duzina_reci = random(5,9);
+  
   lcd.clear();
   lcd.setCursor(0,0);
-  for(i = 0; i < duzina_captcha; i++)
-  {
-    tip = random(0,3);
-    switch(tip)
-    {
-      case(0):
-      {		
-        captcha[i] = random(48,58);
-        break;
-      }
-      case(1):
-      {
-        captcha[i] = random(65,91);
-        break;
-      }
-      case(2):
-      {
-        captcha[i] = random(97,123);
-        break;
-      }
-    }
-    lcd.print(captcha[i]);
+  
+  for (i = 0; i<duzina_reci;i++){ //ispisujemo od 5 do 8 karaktera u zavisnosti od random
+    
+  	tip_karaktera = random(0,3); //za random opsege generisanja cifri, malih i velikih slova
+    if (tip_karaktera == 0) {//CIFRA
+  		rec[i] = random(48,58); //na osnovu ASCII tabele
+      	lcd.print(rec[i]);
+    }  
+    
+    if (tip_karaktera == 1) {//VELIKA SLOVA
+      rec[i] = random(65,91);
+      lcd.print(rec[i]);
+    }  
+    
+    if (tip_karaktera == 2) {//MALA SLOVA
+      rec[i] = random(97,123);
+      lcd.print(rec[i]);
+    }  
     
   }
-
-
-  Serial.println("Unesite tekst: ");
-  while(Serial.available() == 0);
+  
+  
+  char tekst[64]; //unesen tekt;
+  int duzina_teksta;
+  
+  Serial.println("Unesite rec prikazanu na LCD displeju: ");           
+  while (Serial.available()==0);
   delay(100);
-  duzina_test = Serial.available();
-  Serial.readBytes(test, duzina_test);
-  test[duzina_test] = 0;
+  duzina_teksta = Serial.available();
+  Serial.readBytes(tekst,duzina_teksta);
+  tekst[duzina_teksta] = 0;
+  Serial.println(tekst); 
+  
+  if (duzina_teksta == duzina_reci){ //ako su duzine jednake proveravamo karaktere
+    int ispravno = 1; 
+    for (i = 0; i<duzina_teksta; i++){ 
+      if (tekst[i] != rec[i])ispravno=0; 
+    }
+    
+    if (ispravno == 1){
+    	lcd.setCursor(0,1);
+      	lcd.print("VERIFEID");
+    }
+    else {
+    	lcd.setCursor(0,1);
+      	lcd.print("FAILED");
+    }
+    
+  }
+  else { //posto duzine nisu jednake nisu ni reci iste
+   lcd.setCursor(0,1);
+   lcd.print("FAILED");
+  }
+  
+  while (ocitaj_taster() != 1); //nece ponoviti kod dok ne kliknemo select tj izadjemo iz while petlje
+ 
+}
 
-  Serial.println(test);
-  
-
-  ispravno = 1;
-  if(duzina_test != duzina_captcha)
-  {
-	ispravno = 0;
-  }
-  if(test[i] != captcha[i])
-  {
-  	ispravno = 0;
-  }
-  
-  if(ispravno == 1)
-  {
-  	lcd.clear();
-    lcd.setCursor(4,0);
-    lcd.print("USPESNO");
-  }
-  if(ispravno == 0)
-  {
-  	lcd.clear();
-    lcd.setCursor(4,0);
-    lcd.print("failed");
-  }
-  
-  delay(1000);
+byte ocitaj_taster()
+{
+  int tmp = analogRead(0); //stanje tastera se ocitava preko
+  //analognog ulaza 0
+  if (tmp > 635 && tmp < 645) //SELECT
+    return 1;
+  if (tmp > 405 && tmp < 415) //LEFT
+    return 2;
+  if (tmp > 95 && tmp < 105) //UP
+    return 3;
+  if (tmp > 252 && tmp < 262) //DOWN
+    return 4;
+  if (tmp < 5) //RIGHT
+    return 5;
+  return 0; //nije pritisnut nijedan od tastera
 }
