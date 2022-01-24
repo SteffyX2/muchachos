@@ -1,0 +1,16 @@
+8slova
+bankomat
+bodovi
+bomba
+captcha
+konverzija
+login
+notes
+palindrom
+pin
+ponavljanje
+provera
+rec
+screensaver
+serial
+lcd
