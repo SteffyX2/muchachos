@@ -1,0 +1,28 @@
+#include <LiquidCrystal.h>
+
+byte srce[8] = {
+      B01110,
+    B11011,
+    B11111,
+    B01010,
+    B01010,
+    B01010,
+    B11111,
+    B11111
+};
+
+LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
+void setup() {
+    lcd.begin(16, 2);
+    lcd.createChar(0, srce);
+      lcd.setCursor(2,0);
+      lcd.write(":D");
+}
+void loop() {
+  lcd.setCursor(0, 0);
+  lcd.write(byte(0));
+  delay(200);
+  lcd.setCursor(0,0);
+  lcd.write(' ');
+  delay(200);
+}
