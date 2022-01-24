@@ -1,0 +1,236 @@
+#include <LiquidCrystal.h>
+
+LiquidCrystal lcd(8,9,4,5,6,7);
+
+int r;
+int brojac1000, brojac100, brojac10, brojac1;
+unsigned char taster_novo, taster_staro;
+int x,y;
+int vrednost_pina;
+
+void setup()
+{
+  lcd.begin(16,2);
+  Serial.begin(9600);
+  randomSeed ( analogRead (0) ) ;
+  r = random(1000, 9999);
+  Serial.println(r);
+  brojac1000 = 0;
+  brojac100 = 0;
+  brojac10 = 0;
+  brojac1 = 0;
+  lcd.print(brojac1000);
+  lcd.setCursor(1,0);
+  lcd.print(brojac100);
+  lcd.setCursor(2,0);
+  lcd.print(brojac10);
+  lcd.setCursor(3,0);
+  lcd.print(brojac1);
+  lcd.setCursor(0,0);
+  lcd.cursor();
+  taster_novo = 0;
+  taster_staro = 0;
+  x = 0;
+  y = 0;
+  vrednost_pina=0;
+}
+
+void loop()
+{
+  taster_novo = ocitaj_taster();
+  if(taster_novo != taster_staro)
+  {
+    switch(taster_novo)
+    {
+      case 1: //select
+      vrednost_pina=1000*brojac1000+100*brojac100+10*brojac10+1*brojac1;
+      if (r==vrednost_pina)
+      {
+        lcd.setCursor(0,1);
+        lcd.print("UNOS ISPRAVAN");
+      }
+      else
+      {
+        lcd.setCursor(0,1);
+        lcd.print("GRESKA");
+      
+      }
+      
+      break;
+      case 2: //left
+      x--;
+      lcd.setCursor(x,y);
+      lcd.cursor();
+      delay(100);
+      break;
+      case 3: //up
+      if(x==0 && y==0)
+      {
+        if(brojac1000 == 9)
+        {
+        brojac1000=0;
+          lcd.setCursor(x,y);
+       lcd.print(brojac1000);
+       delay(100);
+        }
+        else
+        {
+       brojac1000++;
+       lcd.setCursor(x,y);
+       lcd.print(brojac1000);
+       delay(100);
+        }
+        
+      }
+      else if(x==1 && y==0)
+      {
+        if(brojac100 == 9)
+        {
+        brojac100=0;
+          lcd.setCursor(x,y);
+       lcd.print(brojac100);
+       delay(100);
+        }
+        else
+        {
+       brojac100++;
+       lcd.setCursor(x,y);
+       lcd.print(brojac100);
+        delay(100);
+        }
+      }
+      else if(x==2 && y==0)
+      {
+        if(brojac10 == 9)
+        {
+        brojac10=0;
+          lcd.setCursor(x,y);
+       lcd.print(brojac10);
+       delay(100);
+        }
+        else
+        {
+       brojac10++;
+       lcd.setCursor(x,y);
+       lcd.print(brojac10);
+        delay(100);
+        }
+      }
+      else if(x==3 && y==0)
+      {
+        if(brojac1 == 9)
+        {
+        brojac1=0;
+          lcd.setCursor(x,y);
+       lcd.print(brojac1);
+       delay(100);
+        }
+        else
+        {
+       brojac1++;
+       lcd.setCursor(x,y);
+       lcd.print(brojac1);
+        delay(100);
+        }
+      }
+      break;
+      case 4: //down
+      if(x==0 && y==0)
+      {
+        if(brojac1000 == 0)
+        {
+        brojac1000=9;
+          lcd.setCursor(x,y);
+       lcd.print(brojac1000);
+       delay(100);
+        }
+        else
+        {
+       brojac1000--;
+       lcd.setCursor(x,y);
+       lcd.print(brojac1000);
+        delay(100);
+        }
+      }
+      else if(x==1 && y==0)
+      {
+        if(brojac100 == 0)
+        {
+        brojac100=9;
+          lcd.setCursor(x,y);
+       lcd.print(brojac100);
+       delay(100);
+        }
+        else
+        {
+       brojac100--;
+       lcd.setCursor(x,y);
+       lcd.print(brojac100);
+        delay(100);
+        }
+      }
+      else if(x==2 && y==0)
+      {
+        if(brojac10 == 0)
+        {
+        brojac10=9;
+          lcd.setCursor(x,y);
+       lcd.print(brojac10);
+       delay(100);
+        }
+        else
+        {
+       brojac10--;
+       lcd.setCursor(x,y);
+       lcd.print(brojac10);
+        delay(100);
+        }
+      }
+      else if(x==3 && y==0)
+      {
+        if(brojac1 == 0)
+        {
+        brojac1=9;
+          lcd.setCursor(x,y);
+       lcd.print(brojac1);
+       delay(100);
+        }
+        else
+        {
+       brojac1--;
+       lcd.setCursor(x,y);
+       lcd.print(brojac1);
+        delay(100);
+        }
+      }
+      break;
+      case 5: //right
+      x++;
+      lcd.setCursor(x,y);
+      lcd.cursor();
+      delay(100);
+      break;
+      default:
+      break;
+    }
+  
+  }
+  
+}
+
+byte ocitaj_taster()
+{
+  int tmp = analogRead(0); //stanje tastera se ocitava preko
+  //analognog ulaza 0
+  if (tmp > 635 && tmp < 645) //SELECT
+    return 1;
+  if (tmp > 405 && tmp < 415) //LEFT
+    return 2;
+  if (tmp > 95 && tmp < 105) //UP
+    return 3;
+  if (tmp > 252 && tmp < 262) //DOWN
+    return 4;
+  if (tmp < 5) //RIGHT
+    return 5;
+  return 0; //nije pritisnut nijedan od tastera
+}

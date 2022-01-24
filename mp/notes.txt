@@ -1,0 +1,11 @@
+Serial.begin(9600)
+
+char vrednost[32];
+int duzina;
+
+Serial.println("Unesaite novcani iznos, pracen oznakom valute: ");
+while(Serial.available()==0);
+delay(500);
+duzina = Serial.available();
+Serial.readBytes(vrednost, duzina);
+vrednost[duzina]=0;

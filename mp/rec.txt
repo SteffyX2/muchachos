@@ -1,0 +1,96 @@
+#include <LiquidCrystal.h>
+#include <ctype.h>
+LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
+unsigned char taster_staro,taster_novo;
+char rec[32];
+int duzina,i;
+char slovo;
+
+void setup() {
+  lcd.begin(16, 2);
+  Serial.begin(9600);
+ 
+
+  Serial.println("Unesite rec max 8 slova: ");
+  while(Serial.available() == 0);
+  delay(100);
+  duzina = Serial.available();
+  if(duzina<9)
+  {
+    Serial.readBytes(rec, duzina); 
+    rec[duzina] = 0;
+  }
+ 
+  lcd.print(rec);
+
+  taster_staro = 0;
+  taster_novo = 0;
+}
+
+void loop() {
+  taster_novo = ocitaj_taster();
+  if(taster_novo != taster_staro)
+  { 
+    switch(taster_novo)
+    {
+       case 1: //SELECT
+
+
+          break;
+      case 2: // LEFT
+        lcd.clear();
+        lcd.rightToLeft();
+        lcd.setCursor(duzina,0);
+        lcd.print(rec);
+
+          break;
+      case 3: // UP
+       for(int i=0;i<duzina;i++)
+       {
+         rec[i]=toupper(rec[i]);
+       }
+
+        lcd.clear();
+          lcd.print(rec);
+          break;
+      case 4: // DOWN
+         for(int i=0;i<duzina;i++)
+       {
+         rec[i]=tolower(rec[i]);
+       }
+
+        lcd.clear();
+          lcd.print(rec);
+
+          break;
+      case 5: // RIGHT
+        lcd.clear();
+          lcd.print(rec);
+
+          break;
+      default:
+          break;
+    }
+
+    taster_staro = taster_novo;
+  }
+}
+
+
+
+byte ocitaj_taster()
+{
+int tmp = analogRead(0); //stanje tastera se ocitava preko
+//analognog ulaza 0
+if (tmp > 635 && tmp < 645) //SELECT
+return 1;
+if (tmp > 405 && tmp < 415) //LEFT
+return 2;
+if (tmp > 95 && tmp < 105) //UP
+return 3;
+if (tmp > 252 && tmp < 262) //DOWN
+return 4;
+if (tmp < 5) //RIGHT
+return 5;
+return 0; //nije pritisnut nijedan od tastera
+}

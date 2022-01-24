@@ -1,0 +1,56 @@
+void setup() {
+  Serial.begin(9600);
+  
+}
+
+void loop() {
+  char rec[32],slovo[1];
+ int duzina,duzina2,i,j;
+ int brojac = 0;
+
+ Serial.println("Unesite rec: ");
+ while(Serial.available() == 0); 
+ delay(100);
+ duzina = Serial.available();
+ Serial.readBytes(rec, duzina);
+ rec[duzina] = 0; 
+
+  do {
+ Serial.println("slovo: ");
+ while(Serial.available() == 0); 
+ delay(100);
+  duzina2 = Serial.available();
+ Serial.readBytes(slovo, duzina2); 
+ slovo[duzina2] = 0; 
+  
+    if(duzina2 > 1)
+      Serial.println("Samo jedno slovo");
+  }while(duzina2 > 1);
+  
+  
+    
+  for(i= 0 ;rec[i];i++)
+  for(j=0;slovo[j];j++)
+  {
+    if(rec[i]==slovo[j])
+    {
+      brojac++;
+    }
+    
+  
+  }
+  
+  
+  
+     
+    
+  Serial.println(rec);
+  Serial.println(slovo);
+  Serial.print("U rijeci   ");
+  Serial.print(rec );
+  Serial.print(" slovo  " );
+  Serial.print(slovo);
+  Serial.print(" Se ponavlja ");
+  Serial.print( brojac );
+  Serial.println(" puta/ ");
+  }

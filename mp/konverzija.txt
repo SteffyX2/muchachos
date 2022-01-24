@@ -1,0 +1,47 @@
+ float a;
+ char oznaka;
+ int pare;
+
+void setup(){
+ Serial.begin(9600);
+
+  
+ Serial.println("Unesite kurs Evra: ");
+ while(Serial.available() == 0); 
+ delay(100);
+ a = Serial.parseFloat();
+ Serial.println(a);
+   
+}
+void loop(){
+ Serial.println("Unesite pare sa oznakom: ");
+ while(Serial.available() == 0); 
+ delay(100);
+ pare = Serial.parseInt();
+ oznaka=Serial.read();
+ Serial.print(pare);
+ Serial.println(oznaka);
+  
+  switch(oznaka)
+  {
+    case 'E':
+      Serial.print(pare);
+      Serial.print(oznaka);
+      Serial.print(" = ");
+      Serial.print(a*pare);
+      Serial.println(" Din");
+     break;
+    
+    case 'D':
+      Serial.print(pare);
+      Serial.print(oznaka);
+      Serial.print(" = ");
+      Serial.print(pare/a);
+      Serial.println(" Evra");
+     break;
+   default:
+      Serial.println("Uneli ste nepostojecu oznaku");
+    
+  }
+ 
+}
