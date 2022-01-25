@@ -1,0 +1,49 @@
+import matplotlib.pyplot as plt
+import numpy as np
+plt.rcParams['figure.figsize'] = [15, 10]
+
+# Deterministički signal 7.9cos(2πf0t) odabrati sa periodom odabiranja T=0,5s. Odbirke kvantizovati sa 8 nivoa kvantizacije.
+# Na istom grafiku prikazati originalni signal i kvantizovane odbirke. Kvantizovane odbirke kodovati funkcijom numeracija.
+# Na novom grafiku, u različitim poljima, prikazati originalni signal, signal nakon odabiranja i kvantizacije, i amplitude koje odgovaraju dobijenim kodnim rečima.
+# Na svakom grafiku prikazati tri periode signala. Uzeti da je f0=2Hz i da je minimalna dozvoljena vrednost signala −8V, a maksimalna 8V.
+
+def numeracija(odbirci, nivoi):
+
+    kodovi = np.arange(0, len(nivoi))
+    kod_sig = np.zeros(len(odbirci))
+    for i in range(len(odbirci)):
+        kod_sig[i] = kodovi[nivoi==odbirci[i]]
+
+    return kod_sig
+
+f0 = 2
+T = 0.05
+t = np.arange(0, (3/f0)+0.01, 0.01)
+t1 = np.arange(0, np.max(t)+T, T)
+
+s = 7.9 * np.cos(2*np.pi*f0*t)
+s_s1 = 7.9 * np.cos(2*np.pi*f0*t1)
+
+minS =-8
+maxS = 8
+
+deltaQ = (maxS - minS)/8
+
+s_q1 = np.floor(s_s1/deltaQ) * deltaQ + deltaQ/2
+#
+plt.figure()
+plt.plot(t,s, 'r')
+plt.stem(t1, s_q1, use_line_collection='True')
+plt.title('Originalni signal i kvantizovani odbirci')
+plt.show()
+#
+amp_nivoi = np.arange(-7, 7+deltaQ, deltaQ) #-7, +7 se ocitava sa grafika
+kod_sig = numeracija(s_q1, amp_nivoi)
+#
+fig, axs = plt.subplots(3,1)
+axs[0].plot(t, s)
+axs[1].stem(t1, s_q1, use_line_collection='True')
+axs[2].step(t1, kod_sig)
+fig.suptitle('Originalni signal (gore), signal nakon odabiranja i kvantizacije (sredina) i amplitude koje odgovaraju dobijenim kodnim rečima (dole)')
+
+plt.show()

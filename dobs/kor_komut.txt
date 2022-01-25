@@ -1,0 +1,39 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Proveriti komutativnost međukorelacije na signalima:
+# a(n)=2δ(n)+2δ(n−1)+3δ(n−2)+3δ(n−3)
+# b(n)=2δ(n)−3δ(n−1)+3δ(n−3)+δ(n−5)
+
+#Ulazni signali
+a = np.array([2, 2, 3, 3])
+ta = np.arange(0, 4)
+b = np.array([2, -3, 0, 3, 0, 1])
+tb = np.arange(0, 6)
+
+plt.figure()
+plt.stem(ta, a, use_line_collection = True)
+plt.title('a(n)')
+plt.show()
+
+plt.figure()
+plt.stem(tb, b, use_line_collection = True)
+plt.title('b(n)')
+plt.show()
+
+#Korelacija
+c1 = np.correlate(a, b, mode='full')
+t1 = np.arange(ta[0]-tb[-1], ta[-1]-tb[0]+1)
+
+c2 = np.correlate(b, a, mode='full')
+t2 = np.arange(tb[0]-ta[-1], tb[-1]-ta[0]+1)
+
+plt.figure()
+plt.stem(t1, c1, use_line_collection = True)
+plt.title('c1(n)')
+plt.show()
+
+plt.figure()
+plt.stem(t2, c2, use_line_collection = True)
+plt.title('c2(n)')
+plt.show()

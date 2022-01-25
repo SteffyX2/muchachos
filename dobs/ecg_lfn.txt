@@ -1,0 +1,31 @@
+import numpy as np
+import scipy.signal as sig
+import matplotlib.pyplot as plt
+
+# Jedan od koraka predobrade elektrokardiograma (EKG) signala je uklanjanje
+# različitih artefakata i smetnji. Sa signala ecg_lfn ukloniti niskofrekventni
+# šum (engl. baselinedrift). Signal ecg_lfn je sadržan u fajlu ecg_lfn.txt i
+# odabiran je frekvencijom od 1000 Hz. Za obradu koristi filtar određen prenosnom
+# karakteristikom:
+# H(z)=1−z−11−0.995z−1
+# Analizirati karakteristike filtra korišćenjem funkcije z_trans. Originalni
+# i obrađeni signal su prikazani na slici ispod.
+
+plt.rcParams['figure.figsize'] = [10, 5]
+
+ecg = np.loadtxt('/content/vezba4_podaci/ecg_lfn.txt')
+fs = 1000
+
+y = sig.lfilter(np.array([1, -1]), np.array([1, -0.995]), ecg)
+
+plt.figure()
+plt.plot(np.arange(0, len(ecg))/fs, ecg)
+plt.title('Signal pre filtriranja')
+plt.plot()
+
+plt.figure()
+plt.plot(np.arange(0, len(ecg))/fs, y)
+plt.title('Signal nakon filtriranja')
+plt.plot()
+
+#z_trans(np.array([1, -1]), np.array([1, -0.995]))

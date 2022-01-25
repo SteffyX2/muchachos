@@ -1,0 +1,42 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import scipy.signal as sig
+import scipy.fft as fft
+
+# Elektromiografski signal predstavlja električni signal koji se koristi za
+# analizu mišićne aktivnosti. U okviru ovog zadatka će se analizirati signal
+# koji је snimljen elektrodama postavljanim u području dijafragme psa.
+# Iz elektromiografskog signala emg izdvojiti periodičnu komponentu upotrebom
+# filtra f. Signal je sadržan u fajlu emg.txt, a filtar u f.txt. Frekvencija
+# odabiranja signala emg jeste 10 kHz. Prikazati signal i moduo njegove DFT
+# pre i nakon filtriranja. Izgled signala pre i nakon filtriranja su
+# prikazani na slici ispod.
+
+plt.rcParams['figure.figsize'] = [15, 8]
+
+emg = np.loadtxt('/content/Vezba5_podaci/emg.txt')
+f = np.loadtxt('/content/Vezba5_podaci/f.txt')
+
+fs = 10000
+
+n = np.arange(emg.size)
+t = n/fs
+
+Y = fft.fft(f, n=emg.size)*fft.fft(emg)
+y = fft.ifft(Y)
+
+plt.figure()
+plt.plot(t, emg)
+plt.plot(t, np.real(y), 'r')
+plt.title('EMG signal pre (plavo) i posle filtriranja (crveno)')
+plt.show()
+
+plt.figure()
+plt.plot(np.abs(fft.fft(emg)))
+plt.title('Spektar EMG signala pre filtriranja')
+plt.show()
+
+plt.figure()
+plt.plot(np.abs(fft.fft(y)))
+plt.title('Spektar EMG signala nakon filtriranja')
+plt.show()

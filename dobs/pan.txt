@@ -1,0 +1,138 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import scipy.signal as sig
+import scipy.fft as fft
+
+# Jedan od najpoznatijih algoritama za detekciju QRS kompleksa u EKG signalima je Pan-Tompkinsov algoritam. Algoritam se sastoji od nekoliko koraka:
+# 1) Nad signalom se primenjuje filtar propusnik opsega sa ciljem uklanjanja smetnji koje se ne nalaze u frekvencijskom opsegu u kojem su bitne spektralne komponente QRS kompleksa. Ovako se uklanja šum nastao usled pokreta mišića, mrežni šum, niskofrekventni šum (baselinedrift) itd. Filtar propusnik opsega se može dobiti sukcesivnom upotrebom niskofrekventnog i visokofrekventnog filtra. Niskofrekventni filtar je definisan sledećom prenosnom karakteristikom:
+# HLP(z)=132(1−z−6)2(1−0.99z−1)2
+# Prenosna karakteristika koja definiše visokofrekventni filtar je:
+# HHP(z)=−132+z−16−z−17+132z−321−0.99z−1
+# 2) Sledeći korak je diferenciranje signala koje za cilj ima da istakne delove gde je došlo do naglih promena. Ovaj korak dodatno ističe QRS kompleks kao deo sa strmim nagibima u odnosu na delove signala gde su promene blaže. Spektralna karakteristika diferencijatora je definisana sledećim izrazom:
+# HD(ω)=18(2+e−jω−e−3jω−2e−4jω)
+# 3) Vrednosti signala dobijenog nakon diferenciranja se kvadriraju da bi se dodatno istakle visoke vrednosti koje odgovaraju QRS kompleksu.
+# 4) Poslednji korak u obradi ECG signala je korišćenje aritmetičkog usrednjivača. Za frekvenciju odabiranja signala od 200 Hz se koristi aritmetički usrednjivač dužine 30 odmeraka.
+# h(n)=130∑29m=0δ(n−m)
+# 5) Poslednji korak je detekcija pozicije QRS kompleksa u signalu. Da bi se detektovali R vrhovi, potrebno je pronaći lokalne maksimume čija je vrednost veća od 4000. Ove tačke se mogu odrediti upotrebom funkcije scipy.signal.find_peaks pri čemu treba zadržati samo najviše lokalne maksimume u okolini od 50 odmeraka.
+# Cilj zadatka je da se implementira Pan-Tompkinsov algoritam i da se primeni nad signalom ecg sadržanom u fajlu ecg.txt. Sva filtriranja realizovati upotrebom DFT. Signal je odabiran frekvencijom od 200 Hz. Krajnji rezultat zadatka treba da budu RR intervali (vreme između dva uzastopne R tačke u QRS kompleksima). Treba primetiti da je na osnovu poznatog impulsnog odziva, prenosne ili spektralne karakteristike moguće odrediti DFT filtra. Ako je poznata prenosna karakteristika, spektralna karakteristika se dobija kao poseban slučaj za koji važi:
+# z=ejω
+# Na primer, spektralna karakteristika niskofrekventnog filtra iz dela algoritma pod 1) će biti:
+# HLP(ω)=132(1−e−6jω)2(1−0.99e−jω)2
+# Na osnovu impulsnog odziva filtra je moguće odrediti njegovu prenosnu karakteristiku. Prethodno opisanim postupkom je na osnovu prenosne karakteristike moguće odrediti spektralnu karakteristiku. Na primer, prenosna karakteristika filtra iz dela algoritma pod 4) je:
+# H(z)=130∑29m=0z−m
+# Spektralan karakteristika aritmetičkog usrednjivača je data sa:
+# H(ω)=130∑29m=0e−mjω
+# DFT filtra u N tačaka se dobija odabiranjem spektralne karakteristike sa periodom 2πN. Na primeru niskofrekventnog filtra iz dela algoritma pod 1) se dobija:
+# HLP(k)=132(1−e−6j2πNk)2(1−0.99e−j2πNk)2
+# Pošto je DFT periodična funkcija, dovoljno ju je odrediti za k=0,...,N−1.
+# Sledećim kodom može se odrediti DFT niskofrekventnog filtra iz dela algoritma pod 1):
+
+N = len(ecg)
+k = np.arange(0, N)
+omega = 2*np.pi/N*k
+Hlp=1/32*((1-np.exp(-6j*omega))**2)/((1-0.99*np.exp(-j*omega))**2)
+
+ecg = np.loadtxt('/content/Vezba5_podaci/ecg.txt')
+
+# 1.Pojasno filtriranje
+N = ecg.size
+fs = 200
+t = np.arange(N)/fs
+k = np.arange(N)
+omega = 2*np.pi/N*k
+
+Hlp = 1/32*(1- np.exp(-6j*omega))**2/(1-0.99*np.exp(-1j*omega))**2
+
+w, h = sig.freqz(b=np.array([ 1, 0, 0, 0, 0, 0, -2, 0, 0, 0, 0, 0, 1]), a=np.array([1, -2*0.99, 0.99**2]), worN=fs)
+plt.figure()
+plt.plot((w/np.pi)*fs, np.abs(h))
+plt.xlabel('Frekvencija (Hz)')
+plt.ylabel('Amplituda')
+plt.title('Amplitudska karakteristika filtra')
+plt.show()
+
+plt.figure()
+plt.plot(np.abs(Hlp))
+plt.title('Koeficijenti filtra Hlp')
+plt.show()
+
+Hhp = (-1/32+np.exp(-16j*omega)-np.exp(-17j*omega)+1/32*np.exp(-32j*omega))/(1-0.99*np.exp(-1j*omega))
+plt.figure()
+plt.plot(np.abs(Hhp))
+plt.title('Koeficijenti filtra Hhp')
+plt.show()
+
+Hbp = Hlp*Hhp
+plt.figure()
+plt.plot(np.abs(Hbp))
+plt.title('Koeficijenti filtra Hbp')
+plt.show()
+
+ecg1 = fft.ifft(Hbp*fft.fft(ecg))
+
+plt.figure()
+plt.plot(t, ecg)
+plt.plot(t, np.real(ecg1), 'r')
+plt.title('Ecg signal pre (plavo) i nakon pojasnog filtriranja (crveno)')
+plt.show()
+
+#2. Diferenciranje
+Hd = 1/8*(2+np.exp(-1j*omega)-np.exp(-3j*omega)-2*np.exp(-4j*omega))
+plt.figure()
+plt.plot(np.abs(Hd))
+plt.title('Koeficijenti filtra Hd')
+plt.show()
+
+ecg2 = fft.ifft(Hd*fft.fft(ecg1))
+plt.figure()
+plt.plot(t, np.real(ecg1))
+plt.plot(t, np.real(ecg2), 'r')
+plt.title('Ecg signal pre (plavo) i nakon diferenciranja (crveno)')
+plt.show()
+
+#3. Kvadriranje
+ecg3 = ecg2**2
+
+plt.figure()
+plt.plot(t, np.real(ecg2))
+plt.plot(t, np.real(ecg3), 'r')
+plt.title('Ecg signal pre (plavo) i nakon kvadriranja (crveno)')
+plt.show()
+
+#4. Aritmeticki usrednjivac
+H = np.zeros(omega.size)
+
+for m in range(30):
+  H = H+np.exp(-1j * m * omega)
+
+H = H/30
+
+plt.figure()
+plt.plot(np.abs(H))
+plt.title('Filtar aritmeticki usrednjivac')
+plt.show()
+
+ecg4 = fft.ifft(H*fft.fft(ecg3))
+
+plt.figure()
+plt.plot(t, np.real(ecg3))
+plt.plot(t, np.real(ecg4), 'r')
+plt.title('Ecg signal pre (plavo) i nakon filtriranja aritmetickim usrednjivacem (crveno)')
+plt.show()
+
+#5. Pragovanje
+peak_ind,_ = sig.find_peaks(np.real(ecg4), distance=50, height=5000)
+
+plt.figure()
+plt.plot(np.real(ecg4))
+plt.plot(peak_ind, np.real(ecg4[peak_ind]), 'r*')
+plt.title('R vrhovi na filtriranom signalu')
+plt.show()
+
+#Prikaz na pocetnom signalu
+
+plt.figure()
+plt.plot(ecg)
+plt.plot(peak_ind-35, ecg[peak_ind-35], 'r*')
+plt.title('R vrhovi na originalnom signalu')
+plt.show()

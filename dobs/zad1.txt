@@ -1,0 +1,62 @@
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Signal 7.9cos(2πf0t) odabrati sa periodom odabiranja T=0.25s. 
+# Amlitude odbiraka kvantizovati sa 4 nivoa kvantzacije. 
+# Na istoj figuri sa originalnim signalom prikazati i kvantizovane odbirke. 
+# Kvantizovane odbirke kodovati funkcijama numeracija i binarizacija. 
+# Uporediti dobijene kodove. Posmatrati dve periode signala. 
+# Uzeti da je f0=2Hz i da je minimalna dozvoljena vrednost signala −8V, a maksimalna 8V.
+
+def numeracija(odbirci, nivoi):
+    kodovi = np.arange(0, len(nivoi))
+    kod_sig = np.zeros(len(odbirci))
+    for i in range(len(odbirci)):
+        kod_sig[i] = kodovi[nivoi==odbirci[i]]
+
+    return kod_sig
+
+
+def binarizacija(odbirci, nivoi):
+    kodovi = np.arange(0, len(nivoi))
+    brojevi = np.zeros(len(odbirci))
+    for i in range(len(odbirci)):
+        brojevi[i] = kodovi[nivoi==odbirci[i]]
+
+
+    sekvenca = [bin(broj).replace('0b', '') for broj in brojevi.astype(int)]
+
+    duzine = [len(s) for s in sekvenca]
+    d_max = np.max(duzine)
+    sekvenca = [s.zfill(d_max) for s in sekvenca]
+    sekvenca = ''.join(sekvenca)
+    return sekvenca
+
+
+plt.rcParams['figure.figsize'] = [15, 10]
+f0 = 2
+T = 0.25
+t = np.arange(0, (2/f0)+0.01, 0.01)
+t1 = np.arange(0, np.max(t)+T, T)
+
+s = 7.9 * np.cos(2*np.pi*f0*t)
+s_s1 = 7.9 * np.cos(2*np.pi*f0*t1)
+
+minS = -8
+maxS = 8
+
+deltaQ = (maxS - minS) / 4
+s_q1 = np.floor(s_s1 / deltaQ) * deltaQ + deltaQ/2
+
+plt.figure()
+plt.plot(t, s, 'r')
+plt.stem(t1, s_q1, use_line_collection='True')
+plt.title('Originalni signal i kvantizovani odbirci.')
+plt.show()
+
+amp_nivoi = np.arange(-6,6+deltaQ, deltaQ)
+kod_sig = numeracija(s_q1, amp_nivoi)
+bit_sek = binarizacija(s_q1, amp_nivoi)
+
+print(kod_sig)
+print(bit_sek)

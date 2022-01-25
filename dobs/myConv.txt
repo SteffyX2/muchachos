@@ -1,0 +1,39 @@
+def myConv(a, b):
+  
+  L = len(a)
+  a = a[::-1]
+
+  c = np.zeros(len(b)+L-1)
+
+  #Prosirivanje signala da bi se omogucilo mnozenje
+  b_ext = np.concatenate((np.zeros(L-1), b, np.zeros(L-1)))
+
+  for i in range(len(b_ext)-L+1):
+    tmp = b_ext[i:i+L]*a
+    c[i] = sum(tmp)
+
+  return c
+  
+# Napisati funkciju myConv koja implementira linearnu konvoluciju. Pozvati funkciju nad signalima datim u primeru 2.2.1
+  
+a1 = np.array([2, 2, 3, 3, 1])
+b1 = np.array([2, -3, 0, 3, 0, 1])
+c1 = myConv(a1, b1)
+
+na1 = np.arange(0,5)
+nb1 = np.arange(0,6)
+nc1 = np.arange(na1[0]+nb1[0], na1[-1]+nb1[-1]+1)
+
+plt.figure()
+plt.stem(na1, a1, use_line_collection=True)
+plt.title('a1(n)')
+
+plt.figure()
+plt.stem(nb1, b1, use_line_collection=True)
+plt.title('b1(n)')
+
+plt.figure()
+plt.stem(nc1, c1, use_line_collection=True)
+plt.title('Signal nastao linearnom konvolucijom signala a1(n) i b1(n)')
+
+plt.show()

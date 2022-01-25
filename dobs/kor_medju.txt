@@ -1,0 +1,52 @@
+import numpy as np
+import scipy.signal as sig
+import matplotlib.pyplot as plt
+
+# Međukorelaciona funkcija može da se koristi za poređenje dva signala,
+# te je njenom upotrebom moguće utvrditi prisustvo određenih talasnih
+# oblika u nekom signalu. Ako se jedan signal odabere kao šablon koji
+# predstavlja talasni oblik, intenzitet međukorelacione funkcije tog
+# signala sa nekim drugim signalom će predstavljati meru prisustva šablona.
+# Ovakav način detekcije pojava se naziva poređenje šablona
+# (engl. template matching). Sa signala ecg_lfn ukloniti niskofrekventni šum
+# na način opisan u zadatku 4.5. Odabrati jedan QRS kompleks kao šablon
+# (uzeti trajanje od 500 odmeraka). Prikazati međukorelaciju šablona i signala.
+# Primer šablona i međukorelacione funkcije je dat na slici ispod.
+
+ecg = np.loadtxt('/content/vezba4_podaci/ecg_lfn.txt')
+
+fs=1000
+n = np.arange(0,len(ecg))
+t = n/fs
+
+y = sig.lfilter(np.array([1, -1]), np.array([1, -0.995]), ecg)
+
+plt.figure()
+plt.plot(t, y)
+plt.title('Signal nakon filtriranja')
+plt.show()
+
+s = y[150:650]
+
+plt.figure()
+plt.plot(s)
+plt.title('Sablon')
+plt.show()
+
+c = np.correlate(s, ecg, mode='same')
+c1 = np.correlate(s, y, mode='same')
+
+plt.figure()
+plt.plot(t, c)
+plt.title('Korelacija sablona i originalnog signala')
+plt.show()
+
+plt.figure()
+plt.plot(t, c1)
+plt.title('Korelacija sablona i filtriranog signala')
+plt.show()
+
+plt.figure()
+plt.plot(t, c-c1)
+plt.title('Razlika korelacionih signala pre i nakon filtriranja')
+plt.show()

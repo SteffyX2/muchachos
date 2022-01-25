@@ -1,0 +1,41 @@
+import numpy as np
+import scipy.signal as sig
+import matplotlib.pyplot as plt
+
+plt.rcParams['figure.figsize'] = [10, 5]
+
+# Odrediti vremenski interval između dva uzastopna otkucaja srca u signalu abp2 ako
+# je frekvencija odabiranja signala 125 Hz. S obzirom da je signal značajno oštećen,
+# potrebno je prvo da se isfiltrira šum. Vremenski interval između dva uzastopna
+# otkucaja srca se može odrediti kao vreme koje protekne između dve uzastopne
+# sistole (engl. PI – Pulse Interval). Sa signala abp2 odrediti PI intervale
+# (signal je sadržan u fajlu abp2.txt). Prilikom diskretizacije signala korišćena
+# je frekvencija odabiranja od 125 Hz. Kao što se vidi sa slike ispod (a),
+# signal apb2 je značajno oštećen. Ovo oštećenje se može ublažiti upotrebom
+# aritmetičkog usrednjivača (b). Pošto se vrednost sistolnog pritiska ne koristi
+# prilikom određivanja PI, lokalni maksimumi signala dobijenog filtriranjem se
+# mogu koristiti za određivanje trenutaka kada se desila sistola.
+# Treba primetiti da će trenuci dobijeni nad filtriranim signalom biti pomereni
+# u vremenu za N−12 što predstavlja kašnjenje filtra aritmetičkog usrednjivača
+# dužine N.
+
+abp2 = np.loadtxt('/content/vezba3_podaci/abp2.txt')
+n = np.arange(0, len(abp2))
+
+N=11
+f = np.ones(N)/N
+s_f = sig.convolve(abp2, f, mode='same')
+
+peak_ind,_ = sig.find_peaks(s_f, distance=50)
+
+plt.figure()
+plt.plot(n, s_f)
+#plt.plot(n, abp2)
+plt.plot(peak_ind, s_f[peak_ind], 'r*')
+plt.show()
+
+intSample = np.mean(np.diff(peak_ind))
+intSec = intSample/125
+print('Vremenski interval izmedju dva uzastopna otkucaja iznosi {} sekunde'.format(intSec))
+bpm = np.round(1/intSec*60)
+print('Broj otkucaja u minuti iznosi {}'.format(int(bpm)))

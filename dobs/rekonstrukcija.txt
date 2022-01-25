@@ -1,0 +1,45 @@
+import matplotlib.pyplot as plt
+import numpy as np
+plt.rcParams['figure.figsize'] = [15, 10]
+
+f = 2
+t = np.arange(0, 2.01, 0.01)
+s = np.cos(2 * np.pi * f * t)
+
+f1=3
+f2=4
+
+T1 = 1/3
+T2 = 1/4
+
+t1 = np.arange(0, 2 + T1, T1)
+t2 = np.arange(0, 2 + T2, T2)
+
+s1 = np.cos(2 * np.pi * f * t1)
+s2 = np.cos(2 * np.pi * f * t2)
+
+plt.figure()
+plt.plot(t, s, linewidth=1, color='r')
+plt.stem(t2, s2, use_line_collection='True')
+plt.title('Originalan signal i odbirci koriscenjem frekvecije 4Hz')
+plt.show()
+
+plt.figure()
+plt.stem(t1, s1, use_line_collection='True')
+
+r1 = np.zeros((len(s1), len(t)))
+for i in range(len(s1)):
+    r1[i, :] = s1[i] * np.sinc((t - t1[i]) * f1)
+    plt.plot(t, r1[i, :], linewidth=1)
+rek1 = np.sum(r1, axis=0)
+plt.plot(t, rek1, 'k', linewidth=3)
+plt.show()
+
+plt.figure()
+plt.plot(t, s, linewidth=3)
+plt.plot(t, rek1, 'r', linewidth=3)
+plt.title('Izgled originalnog signala (plava boja) i signala dobijenih rekonstrukcijom na osnovu odbiraka dobijenih odabiranjem sa frekvencijom 3 Hz (crvena boja) i 4 Hz (crna boja)')
+plt.show()
+
+# Odabrati i rekonstruisati deterministički signal opisan prostoperiodičnom kosiunus funkcijom učestanosti 2 Hz korišćenjem učestanosti odabiranja 3 Hz i 4 Hz. 
+# Prikazati postupak rekonstrukcije sabiranjem kardinalnih sinusa. Posmatrati signal u prve dve sekunde.

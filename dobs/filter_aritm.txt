@@ -1,0 +1,62 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import scipy.signal as sig
+
+# Impulsni odziv filtra aritmetičkog usrednjivača dužine N
+# je određen sledećim izrazom: h(n)=1N∑N−1k=0δ(n−k)
+#
+# Odrediti signal s(n)=sin(nπ100) nad vremenskim intervalom n=0,1,...400.
+# Signalu dodati beli Gausov šum varijanse 0.1.
+# Za uklanjanje šuma nad ovim signalom iskoristiti filtar aritmetički
+# usrednjivač sledećih dužina: 5, 21 i 51 odbirak.
+# Signale dobijene filtriranjem uporediti sa signalom s(n).
+
+plt.rcParams['figure.figsize'] = [10, 6]
+
+n = np.arange(0, 401)
+s = np.sin(n*np.pi/100)
+
+#Prikaz signala
+plt.figure()
+plt.plot(n, s)
+plt.ylim((-2, 2))
+plt.title('Signal s(n) pre dodavanja suma')
+plt.show()
+
+#Dodavanje suma
+sn = s + np.random.randn(s.shape[0])*np.sqrt(0.1)
+
+plt.figure()
+plt.plot(n, sn)
+plt.ylim((-2, 2))
+plt.title('Signal s(n) nakon dodavanja suma')
+plt.show()
+
+#Definisanje filtara
+f1 = np.ones(5)/5
+f2 = np.ones(21)/21
+f3 = np.ones(51)/51
+
+#Uklanjanje suma - filtriranje
+s1 = sig.convolve(sn, f1, mode='same')
+s2 = sig.convolve(sn, f2, mode='same')
+s3 = sig.convolve(sn, f3, mode='same')
+
+#Prikaz dobijenih signala
+plt.subplot(3,1,1)
+plt.plot(n, s1)
+plt.plot(n, s, 'r')
+plt.ylim((-2, 2))
+plt.title('Rezultat filtriranja aritmetičkim usrednjivačima dužine 5, 21 i 51 odbirak.\n Signali dobijeni filtriranjem su predstavljeni plavom bojom, \ndok je originalni signal pre dodavanja šuma predstavljen crvenom bojom.')
+
+plt.subplot(3,1,2)
+plt.plot(n, s2)
+plt.plot(n, s, 'r')
+plt.ylim((-2, 2))
+
+plt.subplot(3,1,3)
+plt.plot(n, s3)
+plt.plot(n, s, 'r')
+plt.ylim((-2, 2))
+
+plt.show()

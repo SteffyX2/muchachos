@@ -1,0 +1,28 @@
+import numpy as np
+import scipy.signal as sig
+import matplotlib.pyplot as plt
+
+plt.rcParams['figure.figsize'] = [10, 5]
+
+# Upotrebom funkcije sig.find_peaks nad signalom abp odrediti vrednosti SBP i DBP.
+# Abp signal sadržan je u fajlu abp.txt. Odrediti srednji arterijski krvni pritisak
+# (engl. MAP – Mean Arterial Blood Pressure) koristeći sledeću aproksimaciju:
+# MAP=DBP+1/3*(SBP−DBP)
+
+abp = np.loadtxt('/content/vezba3_podaci/abp.txt')
+peak_ind,_ = sig.find_peaks(abp, height=90)
+
+invabp = -abp
+peak_ind2,_ = sig.find_peaks(invabp, distance=50)
+
+plt.figure()
+plt.plot(abp)
+plt.plot(peak_ind, abp[peak_ind], 'r*')
+plt.plot(peak_ind2, abp[peak_ind2], 'k*')
+plt.show()
+
+SBP = np.sum(abp[peak_ind])/len(abp[peak_ind]) #ili SBP = np.mean(abp[peak_ind])
+DBP=np.sum(abp[peak_ind2])/len(abp[peak_ind2]) #ili DBP = np.mean(abp[peak_ind2])
+MBP=DBP+(SBP-DBP)/3
+
+print('MBP iznosi {}'.format(MBP))
