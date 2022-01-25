@@ -38,3 +38,6 @@ Vezbe5:
 	pan
 Vezbe6:
 	zad6
+	filter_nf
+	filter_vf
+	filter_po
