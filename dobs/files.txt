@@ -1,0 +1,39 @@
+#Vezbe1:
+	binarizacija
+	deterministicki
+	kvantizacija
+	numeracija
+	odabiranje
+	rekonstrukcija
+	zad1
+Vezbe2:
+	diskretni
+	diskretni_konv_lin
+	myConv
+	diskretni_konv
+	diskretni_konv_matrica
+	diskretni_konv_lin_komut
+Vezbe3:
+	filter_aritm
+	filter_max
+	filter_max_gaus
+	filter_klizuci
+	filter_abp
+	filter_abp_srce
+Vezbe4:
+	kor_komut
+	kor_konv
+	z_trans
+	lfilter
+	ecg_lfn
+	kor_medju
+	kor_auto
+Vezbe5:
+	furi_spektar
+	furi_prozor
+	furi_filter
+	emg
+	ecog
+	pan
+Vezbe6:
+	zad6
