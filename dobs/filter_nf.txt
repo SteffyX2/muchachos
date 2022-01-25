@@ -1,0 +1,107 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import scipy.signal as sig
+
+# a) Projektovati NF filtar sa sledećim osobinama: propusni opseg je od 0 ÷ 1 kHz, nepropusni opseg je od 1.5 ÷ 4 kHz, a kašnjenje odziva 35 odbiraka, korišćenjem:
+#     pravougaonog i
+#     Hanovog prozora
+# Frekvencija odabiranja je 8 kHz. Uporediti impulsne odzive i amplitudske karakteristike sistema, dobijenih korišćenjem različitih tipova prozora.
+# b) Kreirati signal s(n)=cos(nπ6)+cos(nπ2)+cos(5nπ6) i analizirati njegov spektar. Zatim taj signal propustiti kroz projektovane NF filtre i uočiti koje komponente prolaze kroz filtre, a koje ne prolaze.
+# Rešenje:
+# a)
+# S obzirom da treba projektovati NF filtar koji unosi kašnjenje od τ=35 odbiraka, dužina impulsnog odziva ovog filtra je M=2⋅35+1=71, što znači da je red ovog filtra M−1=70. Dužina impulsnog odziva je neparna što znači da je ovo NF filtar tipa 1. Ako se posmatra spektar nekog diskretnog signala nastalog odabiranjem učestanošću fs, tada učestanost fs2odgovara kružnoj učestanosti π. Na osnovu specifikacija filtra koji treba projektovati, njegova centralna učestanost fc=1kHz+1.5kHz−1kHz2=1.25kHz. Pošto je ω=2πffs sledi da je količnik ωcπ=fcfs/2=1.25kHz4kHz=0.3125.
+
+plt.rcParams['figure.figsize'] = [10, 5]
+
+h1 = sig.firwin(71, 1.25/4, window='boxcar', pass_zero='lowpass')
+
+plt.figure()
+plt.stem(h1, use_line_collection=True)
+plt.title('Koeficijenti NF filtra 70. reda dobijenog pomocu pravougaone prozorske funkcije')
+plt.show()
+
+fs = 8000
+w, h = sig.freqz(h1, worN=fs)
+
+plt.figure()
+plt.plot((w/np.pi)*fs, np.abs(h))
+plt.xlabel('Frekvencija (Hz)')
+plt.ylabel('Amplituda')
+plt.title('Amplitudska karakteristika filtra')
+plt.show()
+
+fig, ax1 = plt.subplots()
+ax1.set_title('Amplitudska i fazna karakteristika')
+ax1.plot(w, 20 * np.log10(abs(h)), 'b')
+ax1.set_ylabel('Pojacanje [dB]', color='b')
+ax1.set_xlabel('Frekvencija [rad/sample]')
+ax2 = ax1.twinx()
+angles = np.unwrap(np.angle(h))
+ax2.plot(w, angles, 'g')
+ax2.set_ylabel('Faza (rad)', color='g')
+ax2.grid()
+ax2.axis('tight')
+plt.show()
+
+h2 = sig.firwin(71, 1.25/4, window='hann', pass_zero='lowpass')
+
+plt.figure()
+plt.stem(h2, use_line_collection=True)
+plt.title('Koeficijenti NF filtra 70. reda dobijenog pomocu Hanove prozorske funkcije')
+plt.show()
+
+w, h = sig.freqz(h2, worN=fs)
+
+plt.figure()
+plt.plot(w/np.pi, np.abs(h))
+plt.xlabel('Normalizovana frekvencija (pi rad/sample)')
+plt.ylabel('Amplituda')
+plt.title('Amplitudska karakteristika filtra')
+plt.show()
+
+fig, ax1 = plt.subplots()
+ax1.set_title('Amplitudska i fazna karakteristika')
+ax1.plot(w, 20 * np.log10(abs(h)), 'b')
+ax1.set_ylabel('Pojacanje (dB)', color='b')
+ax1.set_xlabel('Frekvencija (rad/sample)')
+ax2 = ax1.twinx()
+angles = np.unwrap(np.angle(h))
+ax2.plot(w, angles, 'g')
+ax2.set_ylabel('Faza (rad)', color='g')
+ax2.grid()
+ax2.axis('tight')
+plt.show()
+
+#b)
+
+n = np.arange(257)
+s = np.cos(n*np.pi/6) + np.cos(n*np.pi/2) + np.cos(5*n*np.pi/6)
+
+w, h = sig.freqz(s)
+
+plt.figure()
+plt.plot(w/np.pi, np.abs(h))
+plt.xlabel('Normalizovana frekvencija (pi rad/sample)')
+plt.ylabel('Amplituda')
+plt.title('Amplitudski spektar signala s(n)')
+plt.show()
+
+y1 = np.convolve(s, h1, 'same')
+w, h = sig.freqz(y1)
+
+plt.figure()
+plt.plot(w/np.pi, np.abs(h))
+plt.xlabel('Normalizovana frekvencija (pi rad/sample)')
+plt.ylabel('Pojacanje')
+plt.title('Amplitudski spektar signala')
+plt.show()
+
+y2 = np.convolve(s, h2, 'same')
+w, h = sig.freqz(y2)
+
+plt.figure()
+plt.plot(w/np.pi, np.abs(h))
+plt.xlabel('Normalizovana frekvencija (pi rad/sample)')
+plt.ylabel('Pojacanje')
+plt.title('Amplitudski spektar signala')
+plt.show()
