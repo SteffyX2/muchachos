@@ -1,0 +1,110 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import scipy.signal as sig
+
+# Projektovati PO filtar sa sledećim osobinama: propusni opseg je od 1.5 ÷ 2.5 kHz, nepropusni opsezi od 0 ÷ 1 kHz i od 3 ÷ 4 kHz a kašnjenje odziva 35 odbiraka, korišćenjem Hanovog prozora. Frekvencija odabiranja je 8 kHz. Filtar projektovati:
+# a) polazeći od impulsnog odziva idealnog PO filtra,
+# b) koristeći činjenicu da se prenosna karakteristika PO filtra može dobiti oduzimanjem prenosne karakteristike jednog NF filtra od prenosne karakteristike drugog NF filtra,
+# c) transliranjem odgovarajućeg NF filtra u spektralnom domenu.
+# Kroz projektovane PO filtre propustiti signal s(n) (iz 6.1) i uočiti koje komponente prolaze kroz filtre, a koje ne prolaze.
+# Rešenje:
+# a)
+# S obzirom da treba projektovati PO filtar koji unosi kašnjenje od τ=35 odbiraka, dužina impulsnog odziva ovog filtra je M=2⋅35+1=71, što znači da je red ovog filtra M−1=70. Dužina impulsnog odziva je neparna što znači da je ovo PO filtar tipa 1. Na osnovu specifikacija filtra koji treba projektovati, njegove centralne učestanosti su fc1=1.25kHz i fc2=2.75kHz. Pošto je ω=2πffs sledi da je količnik ωc1π=fc1fs/2=1.25kHz4kHz=0.3125, a ωc2π=0.6875.
+
+h6=sig.firwin(71,np.array([1.25/4,2.75/4]), window='hann', pass_zero='bandpass')
+
+fs = 8000
+w, h = sig.freqz(h6, worN=fs)
+plt.figure()
+plt.plot(w/np.pi, np.abs(h))
+plt.xlabel('Normalizovana frekvencija (pi rad/sample)')
+plt.ylabel('Amplituda')
+plt.title('Amplitudska karakteristika PO filtra')
+plt.show()
+
+plt.figure()
+plt.plot(w, 20 * np.log10(abs(h)))
+plt.xlabel('Frekvencija (rad/sample)')
+plt.ylabel('Pojacanje (dB)')
+plt.title('Amplitudska karakteristika u dB')
+plt.show()
+
+# Sa slike iznad može se videti da je najmanje slabljenje dobijenog PO filtra u nepropusnom opsegu oko 43 dB.
+# b)
+# Impulsni odziv traženog PO filtra može se dobiti oduzimanjem NF filtra užeg propusnog opsega od NF filtra šireg propusnog opsega. S obzirom da propusni opseg traženog filtra treba da bude 1.5 ÷ 2.5 kHz, treba oduzeti impulsni odziv NF filtra čiji nepropusni opseg počinje od 1.5 kHz, od NF filtra čiji se propusni opseg završava na 2.5 kHz.
+
+h2 = sig.firwin(71, 1.25/4, window='hann', pass_zero='lowpass')
+h4_nf = sig.firwin(71, 2.75/4, window='hann', pass_zero='lowpass')
+h7 = h4_nf - h2
+
+w, h = sig.freqz(h2, worN=fs)
+plt.figure()
+plt.plot(w/np.pi, np.abs(h))
+plt.xlabel('Normalizovana frekvencija (pi rad/sample)')
+plt.ylabel('Amplituda')
+plt.title('Amplitudska karakteristika NF filtra sa uzim propusnim opsegom')
+plt.show()
+
+w, h = sig.freqz(h4_nf, worN=fs)
+plt.figure()
+plt.plot(w/np.pi, np.abs(h))
+plt.xlabel('Normalizovana frekvencija (pi rad/sample)')
+plt.ylabel('Amplituda')
+plt.title('Amplitudska karakteristika NF filtra sa sirim propusnim opsegom')
+plt.show()
+
+w, h = sig.freqz(h7, worN=fs)
+plt.figure()
+plt.plot(w/np.pi, np.abs(h))
+plt.xlabel('Normalizovana frekvencija (pi rad/sample)')
+plt.ylabel('Amplituda')
+plt.title('Amplitudska karakteristika PO filtra dobijenog razlikom 2 NF filtra')
+plt.show()
+
+# c)
+# Traženi PO filtar može se dobiti transliranjem spektra NF filtra (koji ima duplo uži propusni opseg od željenog PO filtra) za π2 udesno na frekvencijskoj osi. Transliranje spektra NF filtra za π2 udesno vrši se množenjem impulsnog odziva NF filtra kosinusom čija je kružna učestanost π2 u vremenskom domenu.
+
+h8_nf = sig.firwin(71, 0.75/4, window='hann', pass_zero='lowpass')
+h8 = h8_nf*2*np.cos(np.pi/2*np.arange(71))
+
+w, h = sig.freqz(h8, worN=fs)
+plt.figure()
+plt.plot(w/np.pi, np.abs(h))
+plt.xlabel('Normalizovana frekvencija (pi rad/sample)')
+plt.ylabel('Amplituda')
+plt.title('Amplitudska karakteristika PO filtra dobijenog transliranjem NF filtra')
+plt.show()
+
+# Množenje kosinusa sa 2 potiče od činjenice da delta impuls ima amplitudu 0.5, a ne želimo da menjamo amplitudski spektar filtra.
+
+n = np.arange(257)
+s = np.cos(n*np.pi/6) + np.cos(n*np.pi/2) + np.cos(5*n*np.pi/6)
+y6 = sig.convolve(s, h6, 'same')
+y7 = sig.convolve(s, h7, 'same')
+y8 = sig.convolve(s, h8, 'same')
+
+w, h = sig.freqz(y6, worN=fs)
+plt.figure()
+plt.plot(w/np.pi, np.abs(h))
+plt.xlabel('Normalizovana frekvencija (pi rad/sample)')
+plt.ylabel('Amplituda')
+plt.title('Amplitudski spektar s(n) isfiltriranog PO filtrom')
+plt.show()
+
+w, h = sig.freqz(y7, worN=fs)
+plt.figure()
+plt.plot(w/np.pi, np.abs(h))
+plt.xlabel('Normalizovana frekvencija (pi rad/sample)')
+plt.ylabel('Amplituda')
+plt.title('Amplitudski spektar s(n) isfiltriranog PO filtrom dobijenim razlikom 2 NF filtra')
+plt.show()
+
+w, h = sig.freqz(y8, worN=fs)
+plt.figure()
+plt.plot(w/np.pi, np.abs(h))
+plt.xlabel('Normalizovana frekvencija (pi rad/sample)')
+plt.ylabel('Amplituda')
+plt.title('Amplitudski spektar s(n) isfiltriranog PO filtrom dobijenim transliranjem NF filtra')
+plt.show()
+
+# Propuštanjem signala s(n) iz primera 1 kroz PO filtre kreirane u primeru 3, biće u sva 3 slučaja propušten samo kosinus na kružnoj učestanosti π2 jer su ωc1=0.3125π i ωc1=0.6875π za sva tri PO filtra.
