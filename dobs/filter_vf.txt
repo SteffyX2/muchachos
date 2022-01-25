@@ -1,0 +1,135 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import scipy.signal as sig
+
+# Projektovati VF filtar sa sledećim osobinama: nepropusni opseg je od 0 ÷ 2.5 kHz, propusni opseg je od 3 ÷ 4 kHz, a kašnjenje odziva 35 odbiraka, korišćenjem Hanovog prozora. Frekvencija odabiranja je 8 kHz. Filtar projektovati:
+# a) polazeći od impulsnog odziva idealnog VF filtra,
+# b) koristeći činjenicu da se prenosna karakteristika VF filtra može dobiti oduzimanjem prenosne karakteristike NF filtra od prenosne karakteristike all-pass filtra,
+# c) transliranjem odgovarajućeg NF filtra u spektralnom domenu.
+# Kroz projektovane VF filtre propustiti signal s(n) (iz primera 6.1) i uočiti koje komponente prolaze kroz filtre, a koje ne prolaze.
+# Rešenje:
+# a)
+# S obzirom da treba projektovati VF filtar koji unosi kašnjenje od τ=35 odbiraka, dužina impulsnog odziva ovog filtra je M=2⋅35+1=71, što znači da je red ovog filtra M−1=70. Dužina impulsnog odziva je neparna što znači da je ovo VF filtar tipa 1. Na osnovu specifikacija filtra koji treba projektovati, njegova centralna učestanost je fc=2.75kHz. Pošto je ω=2πffs sledi da je količnik ωcπ=fcfs/2=2.75kHz4kHz=0.6875.
+
+h3 = sig.firwin(71,2.75/4, window='hann', pass_zero='highpass')
+fs = 8000
+
+w, h = sig.freqz(h3, worN=fs)
+
+plt.figure()
+plt.plot(w/np.pi, np.abs(h))
+plt.xlabel('Normalizovana frekvencija (pi rad/sample)')
+plt.ylabel('Amplituda')
+plt.title('Amplitudska karakteristika VF filtra 70. reda dobijenog pomocu Hanove prozorske funkcije')
+plt.show()
+
+plt.figure()
+plt.plot(w, 20 * np.log10(abs(h)))
+plt.xlabel('Frekvencija (rad/sample)')
+plt.ylabel('Pojacanje (dB)')
+plt.title('Amplitudska karakteristika u dB')
+plt.show()
+
+# Sa slike se može videti da je najmanje slabljenje dobijenog VF filtra u nepropusnom opsegu oko 43 dB.
+# b)
+# Impulsni odziv all-pass filtra koji unosi kašnjenje od k odbiraka je diskretni signal čiji su svi odbirci jednaki nuli, osim k+1-og koji je jednak jedinici. Ovakav filtar u potpunosti propušta signal koji se dovodi na njegov ulaz (signal na izlazu će kasniti k odbiraka). Da bi se od all-pass filtra dobio traženi VF filtar, od impulsnog odziva all-pass filtra koji unosi kašnjenje od 35 odbiraka, treba oduzeti impulsni odziv NF filtra koji ima propusni opseg od 0 ÷ 2.5 kHz, a nepropusni opseg od 3 ÷ 4 kHz i takođe kašnjenje od 35 odbiraka.
+
+hap = np.zeros(71)
+hap[35] = 1
+w, h = sig.freqz(hap, worN=fs)
+plt.figure()
+plt.plot(w/np.pi, np.abs(h))
+plt.xlabel('Normalizovana frekvencija (pi rad/sample)')
+plt.ylabel('Amplituda')
+plt.title('Amplitudska karakteristika allpass filtra')
+plt.show()
+
+h4_nf = sig.firwin(71, 2.75/4, window='hann', pass_zero='lowpass')
+w, h = sig.freqz(h4_nf, worN=fs)
+plt.figure()
+plt.plot(w/np.pi, np.abs(h))
+plt.xlabel('Normalizovana frekvencija (pi rad/sample)')
+plt.ylabel('Amplituda')
+plt.title('Amplitudska karakteristika NF filtra')
+plt.show()
+
+h4 = hap - h4_nf
+w, h = sig.freqz(h4, worN=fs)
+plt.figure()
+plt.plot(w/np.pi, np.abs(h))
+plt.xlabel('Normalizovana frekvencija (pi rad/sample)')
+plt.ylabel('Amplituda')
+plt.title('Amplitudska karakteristika VF filtra dobijenog kao razlika allpass i NF')
+plt.show()
+
+# bez kasnjenja - pogresno
+hap1 = np.zeros(71)
+hap1[0] = 1
+
+w, h = sig.freqz(hap1, worN=fs)
+plt.figure()
+plt.plot(w/np.pi, np.abs(h))
+plt.xlabel('Normalizovana frekvencija (pi rad/sample)')
+plt.ylabel('Amplituda')
+plt.title('Amplitudska karakteristika all-pass filtra')
+plt.show()
+
+h41 = hap1 - h4_nf
+
+w, h = sig.freqz(h41, worN=fs)
+plt.figure()
+plt.plot(w/np.pi, np.abs(h))
+plt.xlabel('Normalizovana frekvencija (pi rad/sample)')
+plt.ylabel('Amplituda')
+plt.title('Amplitudska karakteristika VF filtra')
+plt.show()
+
+# c)
+# Traženi VF filtar može se dobiti transliranjem spektra NF filtra (koji ima iste specifikacije kao NF filtar iz prvog zadatka) za π udesno na frekvencijskoj osi. Transliranje spektra NF filtra za π udesno vrši se množenjem spektra NF filtra faktorom ejπ, a to je u vremenskom domenu ekvivalentno množenju impulsnog odziva NF filtra kosinusom čija je kružna učestanost π. Napomena: cos(nπ)=(−1)n
+
+h2 = sig.firwin(71,1.25/4,window='hann', pass_zero='lowpass')
+h5 = h2*((-1)**np.arange(71))
+
+w, h = sig.freqz(h5, worN=fs)
+plt.figure()
+plt.plot(w/np.pi, np.abs(h))
+plt.xlabel('Normalizovana frekvencija (pi rad/sample)')
+plt.ylabel('Amplituda')
+plt.title('Amplitudska karakteristika VF filtra dobijenog transliranjem NF filtra udesno')
+plt.show()
+
+# Impulsni odziv filtra dobijenog pod c) je jednak invertovanim impulsnim odzivima filtara dobijenih pod a) i b). Da bi se dobio identičan impulsni odziv i u slučaju pod c), kosinus treba uzeti na intervalu [1, 71] umesto [0, 70] čime bi se centralni odbirak impulsnog odziva množio sa 1 umesto -1.
+
+n = np.arange(257)
+s = np.cos(n*np.pi/6) + np.cos(n*np.pi/2) + np.cos(5*n*np.pi/6)
+y3 = sig.convolve(s, h3, 'same')
+y4 = sig.convolve(s, h4, 'same')
+y5 = sig.convolve(s, h5, 'same')
+
+w, h = sig.freqz(y3, worN=fs)
+plt.figure()
+plt.plot(w/np.pi, np.abs(h))
+plt.xlabel('Normalizovana frekvencija (pi rad/sample)')
+plt.ylabel('Amplituda')
+plt.title('Amplitudski spektar s(n) isfiltriranog idalnim VF filtrom')
+plt.show()
+
+w, h = sig.freqz(y4, worN=fs)
+plt.figure()
+plt.plot(w/np.pi, np.abs(h))
+plt.xlabel('Normalizovana frekvencija (pi rad/sample)')
+plt.ylabel('Amplituda')
+plt.title('Amplitudski spektar s(n) isfiltriranog VF filtrom dobijenim kao razlika allpass i NF')
+plt.show()
+
+w, h = sig.freqz(y5, worN=fs)
+plt.figure()
+plt.plot(w/np.pi, np.abs(h))
+plt.xlabel('Normalizovana frekvencija (pi rad/sample)')
+plt.ylabel('Amplituda')
+plt.title('Amplitudski spektar s(n) isfiltriranog VF filtra dobijenog transliranjem NF filtra udesno')
+plt.show()
+
+# Propuštanjem signala s(n) iz primera 1 kroz VF filtre kreirane u primeru 2,
+# biće u sva 3 slučaja propušten samo kosinus na kružnoj učestanosti 5π/6 jer
+# je ωc=0.6875π za sva tri VF filtra.
