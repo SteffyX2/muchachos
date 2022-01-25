@@ -1,0 +1,25 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+f0 = 2
+t = np.arange(0, (3/f0)+0.01, 0.01)
+s = 8 * np.cos(2 * np.pi * f0 * t)
+
+T1 = 0.01
+
+t1 = np.arange(0, (3/f0) + T1, T1)
+
+s_od1 = 8 * np.cos(2 * np.pi * f0 * t1)
+
+plt.figure()
+plt.plot(t, s, linewidth=1, color='r')
+plt.stem(t1, s_od1, use_line_collection='True', markerfmt='*')
+plt.title('Signal dobijen odabiranjem sa periodom T1')
+plt.show()
+
+#Prikazati signale dobijene odabiranjem signala 8cos(4πt) za različite periode odabiranja:
+#   T1=0,01s,
+#   T2=0,05s i
+#   T3=0,1s.
+# Odrediti učestanost datog prostoperiodičnog signala f0. U sva tri slučaja prikazati tri periode signala. 
+# Takođe prikazati i originalni analogni signal.

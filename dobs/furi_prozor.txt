@@ -1,0 +1,40 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import scipy.signal as sig
+import scipy.fft as fft
+
+# Odrediti spektar signala s(n)=cos(nπ5)+0.2cos(3nπ10) koristeći:
+#     pravougaonu,
+#     Hanovu,
+#     Hamingovu
+# prozorsku funkciju za dužine N=20 i N=25.
+
+n=np.arange(0,20)
+s = np.cos(n*np.pi/5)+0.2*np.cos(3*n*np.pi/10)
+
+w1 = np.ones(20)
+w2 = sig.hann(20)
+w3 = sig.hamming(20)
+
+s1 = fft.fft(s*w1)
+s2 = fft.fft(s*w2)
+s3 = fft.fft(s*w3)
+
+wk = np.arange(0,20)*2*np.pi/20
+
+fig, axs = plt.subplots(3,1, constrained_layout=True)
+fig.suptitle('Spektar signala s(n) dobijen uz pomoć različitih prozorskih funkcija za N=20')
+
+axs[0].stem(wk, np.abs(s1), use_line_collection=True)
+plt.ylim((0, 10))
+axs[0].set_title('Pravougaona')
+
+axs[1].stem(wk, np.abs(s2), use_line_collection=True)
+plt.ylim((0, 10))
+axs[1].set_title('Hanova')
+
+axs[2].stem(wk, np.abs(s3), use_line_collection=True)
+plt.ylim((0, 10))
+axs[2].set_title('Hamingova')
+
+plt.show()

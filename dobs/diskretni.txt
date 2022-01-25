@@ -1,0 +1,33 @@
+import numpy as np
+import matplotlib.pyplot as plt
+plt.rcParams['figure.figsize'] = [15, 10]
+
+# Prikazati diskretne signale:
+# x1(n)=δ(n)+2δ(n−1)+3δ(n−2)+2δ(n−3)+δ(n−4)
+# x2(n)=δ(n+2)+2δ(n+1)+3δ(n)+2δ(n−1)+δ(n−2)
+# x3(n)=sin(nπ3), za n∈[0,10]
+# x4(n)=cos(nπ), za n∈[0,10]
+
+x1 = np.array([1, 2, 3, 2, 1])
+n1 = np.array([0, 1, 2, 3, 4])
+plt.figure()
+plt.stem(n1, x1, use_line_collection='True')
+plt.show()
+
+x2 = x1
+n2 = np.array([-2, -1, 0, 1, 2])
+plt.figure()
+plt.stem(n2, x2, use_line_collection='True')
+plt.show()
+
+n3 = np.arange(0,11)
+x3 = np.sin(n3*np.pi/3)
+plt.figure()
+plt.stem(n3, x3, use_line_collection='True')
+plt.show()
+
+n4 = n3
+x4 = np.cos(n4*np.pi)
+plt.figure()
+plt.stem(n4, x4, use_line_collection='True')
+plt.show()

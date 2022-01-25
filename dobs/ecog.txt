@@ -1,0 +1,80 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import scipy.signal as sig
+import scipy.fft as fft
+
+# Elektrokortikografksi (engl. ECoG - electrocorticography) signali se dobijaju
+# snimanjem električnih impulsa preko elektroda koje su postavljene unutar
+# lobanje subjekta. ECoG signal se sastoji od dva dela: nisko frekventnog
+# dela koji predstavlja potencijal lokalnog električnog polja (engl. LFP –
+# local field potential) i visoko frekventno dela koji predstavlja aktivnost
+# pojedinačnih neurona u okolini elektrode (engl. MUA – multyunit activity).
+# LFP signal se može izdvojiti upotrebom niskofrekventnog filtra sa graničnom
+# učestanošću od 250 Hz, dok se MUA signal dobija pojasnim filtriranjem u opsegu
+# 280 Hz do 6000 Hz. U fajlu raw.txt je sadržan ECoG signal raw snimljen preko
+# elektroda implantiranih u mozak makaki majmuna. DFT filtra Flp nalazi se u
+# Flp.txt, a DFT filtra Fbp u Fbp.txt. Upotrebom niskofrekventnog filtra Flp
+# iz ECoG signal izdvojiti LFP komponentu. Prikazati i analizirati moduo DFT
+# filtra Flp. Korišćenjem pojasnog filtra Fbp iz ECoG signal izdvojiti MUA
+# komponentu. Analizirati moduo DFT filtra Fbp. Slika ispod prikazuje segment
+# neobrađenog raw signala i odgovarajuće LFP i MUA signale. Treba primetiti
+# da se sa MUA signala jasno uočavaju delovi signala koji predstavljaju
+# aktivnost neurona (akcioni potencijal).
+# Frekvencija odabiranja signala raw je 22321 Hz.
+
+ecog = np.loadtxt('/content/Vezba5_podaci/raw.txt')
+Flp = np.loadtxt('/content/Vezba5_podaci/Flp.txt')
+Fbp = np.loadtxt('/content/Vezba5_podaci/Fbp.txt')
+
+plt.rcParams['figure.figsize'] = [10, 5]
+plt.figure()
+plt.plot(np.abs(Flp))
+plt.title('DFT Flp filtra')
+plt.show()
+
+plt.figure()
+plt.plot(np.abs(Fbp))
+plt.title('DFT Fbp filtra')
+plt.show()
+
+
+
+LFP = fft.ifft(Flp*fft.fft(ecog))
+MUA = fft.ifft(Fbp*fft.fft(ecog))
+
+fs = 22321
+t = np.arange(ecog.size)/fs
+
+plt.figure()
+plt.plot(t, ecog)
+plt.title('EcoG signal')
+plt.show()
+
+plt.figure()
+plt.plot(t, np.real(LFP))
+plt.title('LFP signal')
+plt.show()
+
+plt.figure()
+plt.plot(t, np.real(MUA))
+plt.title('MUA signal')
+plt.show()
+
+
+#prikaz segmenta u intervalu 0.21-0.29
+idx = (0.21<t) & (t<0.29)
+
+plt.figure()
+plt.plot(t[idx], ecog[idx])
+plt.title('EcoG signal na intervalu 0.21-0.29 s')
+plt.show()
+
+plt.figure()
+plt.plot(t[idx], np.real(LFP[idx]))
+plt.title('LFP signal na intervalu 0.21-0.29 s')
+plt.show()
+
+plt.figure()
+plt.plot(t[idx], np.real(MUA[idx]))
+plt.title('MUA signal na intervalu 0.21-0.29 s')
+plt.show()

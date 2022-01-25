@@ -1,0 +1,41 @@
+import numpy as np
+import scipy.signal as sig
+import matplotlib.pyplot as plt
+
+# Autokorelaciona funkcija predstavlja međukorelacionu funkciju signala sa
+# samim sobom. Autokorelaciona funkcija se može iskoristiti da bi se utvrdilo
+# prisustvo sličnih obrazaca u signalu koji se periodično ponavljaju.
+# Odrediti autokorelacionu funkciju nad elektroencefalogramskim signalom
+# (EEG) eeg koji je sadržan u datoteci eeg.txt. Navedeni signal predstavlja
+# snimke alfa ritma. Frekvencija odabiranja signala je 100 Hz. Odrediti
+# prosečno trajanje talasa koji predstavljaju alfa ritam kao rastojanje između
+# uzastopnih lokalnih maksimuma autokorelacione funkcije. Izgled signala eeg i
+# njegove autokorelacione funkcije su prikazani na slici ispod.
+
+eeg = np.loadtxt('/content/vezba4_podaci/eeg.txt')
+fs = 100
+
+n = np.arange(0, len(eeg))
+t = n/fs
+
+plt.figure()
+plt.plot(t, eeg)
+plt.title('EEG signal')
+plt.show()
+
+c = np.correlate(eeg, eeg, mode='full')
+
+#nc = np.arange(n[0]-n[-1], n[-1]-n[0]+1)
+# plt.figure()
+# plt.plot(nc, c)
+# plt.show()
+#tc = nc/fs
+
+plt.figure()
+plt.plot(np.arange(-len(eeg)+1, len(eeg))/fs, c)
+plt.title('Autokorelacioni signal')
+plt.show()
+
+peak_ind,_ = sig.find_peaks(c)
+dist = np.mean(np.diff(peak_ind))
+print('Prosecno trajanje talasa koji predstavljaju alfa ritam iznosi {} sekundi'.format(dist/fs))

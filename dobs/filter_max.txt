@@ -1,0 +1,30 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import scipy.signal as sig
+
+# Odrediti signal s(n)=sin(nπ16)+sin(nπ8) nad vremenskim intervalom
+# n=0,1,...200. Pronaći sve lokalne maksimume signala,
+# a nakon toga odrediti samo lokalne maksimume u okolini od 20 odbiraka.
+
+plt.rcParams['figure.figsize'] = [10, 5]
+
+n = np.arange(0, 201)
+s = np.sin(n*np.pi/16)+np.sin(n*np.pi/8)
+
+#Odredjivanje lokalnih maksimuma
+peak_ind,_ = sig.find_peaks(s)
+
+plt.figure()
+plt.plot(n, s)
+plt.plot(peak_ind, s[peak_ind], 'r*')
+plt.title('Signal s(n) sa obeleženim svim lokalnim maksimumima (crveno)')
+plt.show()
+
+#Odredjivanje samo najvisih lokalnih maksimuma
+peak_ind,_ = sig.find_peaks(s, distance=20)
+
+plt.figure()
+plt.plot(n, s)
+plt.plot(peak_ind, s[peak_ind], 'r*')
+plt.title('Signal s(n) sa obeleženim lokalnim maksimumima (crveno) nad okolinom od 20 odbiraka.')
+plt.show()

@@ -1,0 +1,129 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Filtar f(n) je određen prenosnom karakteristikom:
+# F(z)=1+0.9z−41+0.4z−3
+# Korišćenjem funkcije z_trans analizirati prenosnu i amplitudsku karakteristiku filtra.
+# H(z)=∑Mk=0bkz−k1+∑Nk=1akz−k
+# H(z)=b0z0+b1z−1+...+bMz−M1+a1z−1+...+aNz−N
+
+def z_trans(b, a=1):
+  # definisanje tacaka u z-ravni
+  w = np.pi * np.arange(-1, 1.001, 0.001)
+  th, r = np.meshgrid(np.pi * np.arange(-1, 1.01, 0.01), np.arange(0, 1.55, 0.05))
+  X = r * np.cos(th)
+  Y = r * np.sin(th)
+  Z = X + 1j * Y
+
+  # sracunavanje z-transformacije brojioca
+  fz_numerator = np.zeros(Z.shape).astype(np.complex128)
+  for k in range(len(b)):
+    fz_numerator += b[k] * (Z ** (1 - (k + 1)))
+
+  # sracunavanje z-transformacije imenioca
+  fz_denominator = np.zeros(Z.shape).astype(np.complex128)
+  for k in range(len(a)):
+    fz_denominator += a[k] * (Z ** (1 - (k + 1)))
+
+  # problem deljenja sa nulom
+  fz_denominator[fz_denominator == 0] = 10 ** (-3)
+  fz = fz_numerator / fz_denominator
+
+  # iscrtavanje z-transformacije
+  plt.figure()
+  ax = plt.axes(projection='3d')
+  ax.plot_surface(X[1:, :], Y[1:, :], np.abs(fz[1:, :]), cmap='plasma', alpha=0.6)
+  ax.set_xlabel('realna osa')
+  ax.set_ylabel('imaginarna osa')
+  ax.set_zlabel('|H(z)|')
+  ax.set_xlim(-1.5, 1.5)
+  ax.set_ylim(-1.5, 1.5)
+  ax.set_zlim(0, 80)
+  plt.title('Moduo prenosne karakteristike')
+  plt.pause(5)
+
+  # pravljenje pitomije da bi se uocile vrednost u kojima ne divlja
+  ax.set_xlim(-1.5, 1.5)
+  ax.set_ylim(-1.5, 1.5)
+  ax.set_zlim(0, 5)
+  plt.title('Uvecan centralni deo modula prenosne karakteristike')
+  plt.pause(5)
+
+  # sracunavanje nula i polova
+  lb = len(b)
+  la = len(a)
+  if la > lb:
+    b1 = np.concatenate((b, np.zeros(la - lb)), axis=0)
+  else:
+    b1 = b
+  if lb > la:
+    a1 = np.concatenate((a, np.zeros(lb - la)), axis=0)
+  else:
+    a1 = a
+  zr = np.roots(b1)
+  po = np.roots(a1)
+
+  # iscrtavanje nulea i polova
+  ax.plot(np.real(zr), np.imag(zr), 'ko')
+  ax.plot(np.real(po), np.imag(po), 'kx')
+  plt.pause(5)
+
+  # iscrtavanje cilindra
+  x = np.linspace(-1, 1, 100)
+  z = np.linspace(0, 5, 100)
+  Xc, Zc = np.meshgrid(x, z)
+  Yc = np.sqrt(1 - Xc ** 2)
+  ax.plot_surface(Xc, Yc, Zc, alpha=0.6, rstride=20, cstride=10, color='yellow')
+  ax.plot_surface(Xc, -Yc, Zc, alpha=0.6, rstride=20, cstride=10, color='yellow')
+  plt.title('Presek modula prenosne karakteristike sa valjkom jedinicnog poluprecnika')
+  plt.pause(5)
+
+  # sracunavanje FTD
+  fw_num = np.zeros(len(w)).astype(np.complex128)
+  for k in range(len(b)):
+    fw_num += b[k] * np.exp(1j * (1 - (k + 1)) * w)
+
+  fw_denom = np.zeros(len(w)).astype(np.complex128)
+  for k in range(len(a)):
+    fw_denom += a[k] * np.exp(1j * (1 - (k + 1)) * w)
+
+  # problem deljenja sa nulom
+  fw_denom[fw_denom == 0] = 10 ** (-3)
+  fw = fw_num / fw_denom
+
+  ax.plot(np.cos(w), np.sin(w), np.abs(fw), 'r', linewidth=3)
+  plt.pause(5)
+
+  plt.show()
+
+  # otvaranje novog prozora za 2D prikaz FTD
+  plt.figure()
+  plt.plot(w, np.abs(fw), 'r')
+  plt.xlabel('$-\pi<\omega<\pi$')
+  plt.ylabel('$|H(\omega)|$')
+  ymax = np.minimum(np.abs(fw).max(), 80)
+  plt.xlim(-np.pi, np.pi)
+  plt.ylim(-1, ymax)
+  plt.xticks(np.arange(-np.pi, np.pi + np.pi / 2, np.pi / 2), ['-pi', '-pi/2', '0', 'pi/2', 'pi'])
+  plt.title('Amplitudska karakteristika sa nulama (o) i polovima (x)')
+
+  zidx = np.where(zr != 0)
+  zr1 = zr[zidx]
+  pidx = np.where(po != 0)
+  po1 = po[pidx]
+
+  plt.plot(np.angle(zr1), np.zeros(len(zr1)), 'ko')
+  plt.plot(np.angle(po1), np.zeros(len(po1)), 'kx')
+  plt.show()
+
+  print('polovi:')
+  print(po)
+  print('moduo i argument')
+  print([np.abs(po), np.angle(po)])
+  print('---------------------------------------------------------------------')
+  print('nule:')
+  print(zr)
+  print('moduo i argument')
+  print([np.abs(zr), np.angle(zr)])
+
+z_trans(np.array([1, 0, 0, 0, 0.9]), np.array([1, 0, 0, 0.4]))

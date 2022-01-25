@@ -1,0 +1,15 @@
+def binarizacija(odbirci, nivoi):
+
+    kodovi = np.arange(0, len(nivoi))
+    brojevi = np.zeros(len(odbirci))
+    for i in range(len(odbirci)):
+        brojevi[i] = kodovi[nivoi==odbirci[i]]
+
+
+    sekvenca = [bin(broj).replace('0b', '') for broj in brojevi.astype(int)]
+
+    duzine = [len(s) for s in sekvenca]
+    d_max = np.max(duzine)
+    sekvenca = [s.zfill(d_max) for s in sekvenca]
+    sekvenca = ''.join(sekvenca)
+    return sekvenca

@@ -1,0 +1,25 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import scipy.signal as sig
+import scipy.fft as fft
+
+# Filtrirati signal s(n)=cos(nπ2)+0.2cos(14nπ15) dužine 100 odbiraka u
+# spektralnom domenu filtrom čiji se impulsni odziv nalazi u fajlu filtar6.txt.
+
+h = np.loadtxt('/content/Vezba5_podaci/filtar6.txt')
+
+n = np.arange(0,100)
+s = np.cos(n*np.pi/2)+0.2*np.cos(14*n*np.pi/15)
+
+F = fft.fft(h, n=100)
+y = fft.ifft(F*fft.fft(s))
+
+plt.figure()
+plt.plot(n, s)
+plt.title('Ulazni signal')
+plt.show()
+
+plt.figure()
+plt.plot(n, y)
+plt.title('Isfiltrirani signal')
+plt.show()

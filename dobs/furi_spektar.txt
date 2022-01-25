@@ -1,0 +1,52 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import scipy.signal as sig
+import scipy.fft as fft
+
+# Odrediti spektar signala s(n)=cos(nπ5)+0.2cos(3nπ10) ograničenog na N, 2N i 3N/2
+# odbiraka, gde je N perioda signala s(n). Uporediti rezultate DFT i FTD spektra
+# za različite slučajeve i utvrditi kada dolazi do curenja spektra.
+
+plt.rcParams['figure.figsize'] = [10, 5]
+
+n = np.arange(0,20)
+s = np.cos(n*np.pi/5)+0.2*np.cos(3*n*np.pi/10)
+
+[w, S] = sig.freqz(s, 1, whole=True) #frekvencije od 0 do fs
+
+S2 = fft.fft(s)
+wk = 2*np.arange(0,20)*np.pi/20
+
+plt.figure()
+plt.plot(w, abs(S), 'r')
+plt.stem(wk, np.abs(S2), use_line_collection=True)
+plt.title('FTD (crveno) i DFT (plavo) u 20 tacaka')
+plt.show()
+
+n = np.arange(0,40)
+s = np.cos(n*np.pi/5)+0.2*np.cos(3*n*np.pi/10)
+
+[w, S] = sig.freqz(s, 1, whole=True) #frekvencije od 0 do fs
+
+S2 = fft.fft(s)
+wk = 2*np.arange(0,40)*np.pi/40
+
+plt.figure()
+plt.plot(w, abs(S), 'r')
+plt.stem(wk, np.abs(S2), use_line_collection=True)
+plt.title('FTD (crveno) i DFT (plavo) u 2N=40 tacaka')
+plt.show()
+
+n = np.arange(0,30)
+s = np.cos(n*np.pi/5)+0.2*np.cos(3*n*np.pi/10)
+
+[w, S] = sig.freqz(s, 1, whole=True) #frekvencije od 0 do fs
+
+S2 = fft.fft(s)
+wk = 2*np.arange(0,30)*np.pi/30
+
+plt.figure()
+plt.plot(w, abs(S), 'r')
+plt.stem(wk, np.abs(S2), use_line_collection=True)
+plt.title('FTD (crveno) i DFT (plavo) u 3N/2=30 tacaka')
+plt.show()

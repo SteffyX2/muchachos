@@ -1,0 +1,27 @@
+import numpy as np
+import scipy.signal as sig
+import matplotlib.pyplot as plt
+
+# Filtar h(n) je određen prenosnom karakteristikom:
+# H(n)=1−α/1−αz(^−1)
+# Korišćenjem funkcije z_trans analizirati prenosnu i amplitudsku karakteristiku
+# filtra za vrednosti α=0.2,0.5,0.8.
+
+plt.rcParams['figure.figsize'] = [10, 5]
+
+abp = np.loadtxt('/content/vezba4_podaci/abp2.txt')
+
+alpha = 0.6
+y = sig.lfilter(np.array([1-alpha]), np.array([1, -alpha]), abp)
+
+fs = 125
+
+plt.figure()
+plt.plot(np.arange(0,len(abp))/fs, abp)
+plt.title('Signal pre filtriranja')
+plt.show()
+
+plt.figure()
+plt.plot(np.arange(0,len(y))/fs, y)
+plt.title('Signal nakon filtriranja')
+plt.show()

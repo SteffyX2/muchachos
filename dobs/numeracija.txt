@@ -1,0 +1,8 @@
+def numeracija(odbirci, nivoi):
+
+    kodovi = np.arange(0, len(nivoi))
+    kod_sig = np.zeros(len(odbirci))
+    for i in range(len(odbirci)):
+        kod_sig[i] = kodovi[nivoi==odbirci[i]]
+
+    return kod_sig

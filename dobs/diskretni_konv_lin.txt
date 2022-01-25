@@ -1,0 +1,54 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import scipy.signal as sig
+plt.rcParams['figure.figsize'] = [15, 10]
+
+# Odrediti i prikazati signale koji predstavljaju linearnu konvoluciju diskretnih signala:
+#     a1(n)=2δ(n)+2δ(n−1)+3δ(n−2)+3δ(n−3)+δ(n−4)
+#     b1(n)=2δ(n)−3δ(n−1)+3δ(n−3)+δ(n−5)
+#     a2(n)=δ(n−5)−δ(n−6)+3δ(n−7)−2δ(n−8)
+#     b2(n)=δ(n+2)−2δ(n+1)+2δ(n−1)−δ(n−2)
+
+a1 = np.array([2, 2, 3, 3, 1])
+b1 = np.array([2, -3, 0, 3, 0, 1])
+c1 = sig.convolve(a1, b1)
+
+na1 = np.arange(0,5)
+nb1 = np.arange(0,6)
+nc1 = np.arange(na1[0]+nb1[0], na1[-1]+nb1[-1]+1)
+
+plt.figure()
+plt.stem(na1, a1, use_line_collection=True)
+plt.title('a1(n)')
+
+plt.figure()
+plt.stem(nb1, b1, use_line_collection=True)
+plt.title('b1(n)')
+
+plt.figure()
+plt.stem(nc1, c1, use_line_collection=True)
+plt.title('Signal nastao linearnom konvolucijom signala a1(n) i b1(n)')
+
+plt.show()
+
+a2 = np.array([1, -1, 3, -2])
+b2 = np.array([1, -2, 0, 2, -1])
+c2 = sig.convolve(a2, b2)
+
+na2 = np.arange(5,9)
+nb2 = np.arange(-2,3)
+nc2 = np.arange(na2[0]+nb2[0], na2[-1]+nb2[-1]+1)
+
+plt.figure()
+plt.stem(na2, a2, use_line_collection=True)
+plt.title('a2(n)')
+
+plt.figure()
+plt.stem(nb2, b2, use_line_collection=True)
+plt.title('b2(n)')
+
+plt.figure()
+plt.stem(nc2, c2, use_line_collection=True)
+plt.title('Signal nastao linearnom konvolucijom signala a2(n) i b2(n)')
+
+plt.show()

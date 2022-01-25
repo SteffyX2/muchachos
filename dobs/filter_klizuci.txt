@@ -1,0 +1,41 @@
+import numpy as np
+import scipy.signal as sig
+import matplotlib.pyplot as plt
+
+plt.rcParams['figure.figsize'] = [10, 5]
+
+# Pošto filtar aritmetički usrednjivač određuje srednju vrednost N odbiraka,
+# filtriranje se može predstaviti sledećim izrazom:
+# y(n)=1N∑n+N−1k=nx(k)
+# gde x(n) predstavlja signal, y(n) je signal dobijen filtriranjem,
+# a N predstavlja dužinu filtra. Vrednost y(m+1) se može odrediti na osnovu y(m):
+# y(m+1)=y(m)−x(m)/N+x(m+N)/N
+# Uvođenjem smene n=m+1 se dobija:
+# y(n)=y(n−1)−x(n−1)/N+x(n+N−1)/N
+# Prethodni izraz određuje način implementacije filtra aritmetičkog
+# usrednjivača koja se naziva „kližući usrednjivač“.
+# Napisati funkciju movingAverage koja implementira kližući usrednjivač.
+# Funkciju isprobati na signalu sadržanom u fajlu abcd.txt.
+
+def movingAverage(x, N):
+
+  y = np.zeros(len(x)-N+1)
+  y[0] = np.mean(x[:N])
+  for i in range(1,len(x)-N+1):
+    y[i] = y[i-1]-x[i-1]/N+x[i+N-1]/N
+
+  return y
+
+s = np.loadtxt('/content/vezba3_podaci/abcd.txt')
+
+plt.figure()
+plt.plot(s)
+plt.title('Ulazni signal')
+plt.show()
+
+s_f = movingAverage(s, 51)
+
+plt.figure()
+plt.plot(s_f)
+plt.title('Isfiltrirani signal')
+plt.show()
