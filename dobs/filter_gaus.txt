@@ -1,0 +1,66 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import scipy.signal as sig
+
+
+# Na signal iz primera 3.2 dodati beli Gausov šum varijanse 4.
+# Odrediti lokalne maksimume u okolini od 20 odbiraka. 
+# Učitati i prikazati impulsni odziv filtra f sadržanog u fajlu filtar.txt.
+# Na signalu dobijenom upotrebom filtra nad zašumljenim signalom odrediti lokalne maksimume.
+
+
+n = np.arange(0, 201)
+s = np.sin(n * np.pi / 16) + np.sin(n * np.pi / 8)
+peak_ind, _ = sig.find_peaks(s, distance=20)
+
+plt.figure()
+plt.plot(n, s)
+plt.plot(peak_ind, s[peak_ind], 'r*')
+plt.xlim((0, 200))
+plt.title('Originalni signal')
+plt.show()
+
+# Dodavanje suma
+sn = s + np.random.randn(s.shape[0]) * np.sqrt(4)
+
+# Odredjivanje lokalnih maksimuma
+peak_ind_n, _ = sig.find_peaks(sn, distance=20)
+
+plt.figure()
+plt.plot(n, sn)
+plt.plot(peak_ind_n, sn[peak_ind_n], 'r*')
+plt.xlim((0, 200))
+plt.title('Signal sa dodatim sumom. Lokalni maksimumi obelezeni crvenom bojom')
+plt.show()
+
+# Ucitavanje filtera
+f = np.loadtxt('/content/vezba3_podaci/filtar.txt')
+
+plt.figure()
+plt.plot(np.arange(0, len(f)), f)
+plt.title('Filtar')
+plt.show()
+
+#Filtriranje
+sf = sig.convolve(sn, f, mode='same')
+
+#Određivanje lokalnih maksimuma na filtriranom signalu
+peak_ind,_ = sig.find_peaks(sf, distance=20)
+
+plt.figure()
+plt.plot(n, sf)
+plt.plot(peak_ind, sf[peak_ind], 'r*')
+plt.xlim((0,200))
+plt.title('Signal dobijen filtriranjem. Lokalni maksimumi obelezeni crvenom bojom')
+plt.show()
+
+#Objedinjeni prikaz signala
+plt.figure()
+plt.plot(n, sn)
+plt.plot(n, s, 'k')
+plt.plot(n, sf, 'r')
+plt.plot(peak_ind, sf[peak_ind], 'r*')
+plt.plot(peak_ind_n, sn[peak_ind_n], 'k*')
+plt.xlim((0,200))
+plt.title('Originalni signal (crna boja), signal sa dodatim sumom (plava boja), signal dobijen filtriranjem (crvena boja),\n lokalni maksimumi dobijeni na osnovu zasumljenog signala (crne zvezdice) \ni lokalni maksimumi dobijeni na osnovu filtriranog signala (crvene zvezdice).')
+plt.show()
