@@ -82,3 +82,12 @@ omega = [x[2] for x in sol.u]
 alfa = diff(omega) ./ diff(sol.t)
 plot(sol.t, [teta, omega], lw=2, label=["Pomeraj" "Brzina"])
 plot!(sol.t[1:end-1], alfa, lw=2, label="Ubrzanje")
+
+=============================================================================
+#PREDJENI PUT
+
+poz = [x[3] for x in sol.u]
+predjeni_put = sum(abs.(diff(poz)))
+b1=[x[4] for x in sol.u]
+a = diff(b1) ./ diff(sol.t)
+plot!(sol.t[1:end-1], a, label="predjeni put")
