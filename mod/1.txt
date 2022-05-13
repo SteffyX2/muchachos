@@ -24,3 +24,41 @@ end
 f([2 3 3;
     5 5 2;
     6 6 6;],2)
+
+=============================================================================
+
+using LinearAlgebra
+function primer4(A)
+M = ones(size(A));
+M = tril(M, -1); # obratite pažnju na drugi parametar
+Ml = convert.(Bool, M);
+el_ispod_gl_dijagonale = A[Ml];
+ukupno = length(el_ispod_gl_dijagonale);
+return el_ispod_gl_dijagonale, ukupno;
+end
+
+=============================================================================
+
+using Statistics
+using LinearAlgebra
+function primer2(A, s)
+elementi = A[A .== s];
+p = length(elementi);
+elementi = A[A .< s];
+v = mean(elementi);
+return p, v;
+end
+
+=============================================================================
+
+using Statistics # neophodan zbog funkcije mean
+using LinearAlgebra
+function primer1(A)
+s = mean(A[end, :])
+gd = diag(A)
+v = gd[gd .> 0]
+return s, v
+end
+# primer poziva
+A = round.(20 * randn(10, 10))
+sk, vek = primer1(A)
