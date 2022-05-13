@@ -26,6 +26,7 @@ f([2 3 3;
     6 6 6;],2)
 
 =============================================================================
+#ISPOD GLAVNE DIJAGONALE
 
 using LinearAlgebra
 function primer4(A)
@@ -62,3 +63,22 @@ end
 # primer poziva
 A = round.(20 * randn(10, 10))
 sk, vek = primer1(A)
+
+=============================================================================
+#UGAONA BRZINA
+
+t = (0.0, 20.0)
+p = (10.0, 5.0, 10.0, 15.0, 10.0, 1.0, 9.81)
+x0 = [0.0, 0.0, 2.0, 0.0]
+
+
+t = (0.0, 20.0)
+p = (10.0, 5.0, 10.0, 15.0, 10.0, 1.0, 9.81)
+x0 = [0.0, 0.0, 2.0, 0.0]
+prob = ODEProblem(sistem!, x0, t, p)
+sol = solve(prob)
+teta = [x[1] for x in sol.u]
+omega = [x[2] for x in sol.u]
+alfa = diff(omega) ./ diff(sol.t)
+plot(sol.t, [teta, omega], lw=2, label=["Pomeraj" "Brzina"])
+plot!(sol.t[1:end-1], alfa, lw=2, label="Ubrzanje")
