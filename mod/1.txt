@@ -1,0 +1,26 @@
+function f(A,x)
+    # suma parnih neparnih deljivi sa x
+    el=A[1:2:end,2:2:end]
+    del=el[rem.(A,x).==0]
+    c=sum(del)
+    #glavna dijagonala manja vrednot od max
+    gd= diag(A)
+    m=ones(size(A))
+    maska=triu(m,1)
+    el=convert(bool,maska)
+    iznad=A[el]
+    max=maximum(iznad)
+    max2=A[gd.<max]
+    p=length[max2]
+    #pozicija  kolone A jednak ulazu x
+    s=A.==x
+    ss=sum(s,dims=1)
+    f=findmax(ss)
+
+
+
+    return c,p,f
+end
+f([2 3 3;
+    5 5 2;
+    6 6 6;],2)
