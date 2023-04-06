@@ -1,0 +1,1 @@
+-high -novid -autoexec -tickrate 128 -nojoy -nothreadedsockets -threads 4
